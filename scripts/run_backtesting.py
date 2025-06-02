@@ -32,7 +32,7 @@ from utils.helpers import load_config, save_json, ensure_directory
 def setup_logging():
     """Setup logging for the script."""
     log_config = {
-        'log_level': 'INFO',  # Fixed: Changed from 'level' to 'log_level'
+        'log_level': 'INFO',
         'enable_console': True,
         'enable_file': True,
         'log_dir': 'logs',

@@ -15,6 +15,22 @@ from pathlib import Path
 from scipy.optimize import minimize
 from sklearn.model_selection import ParameterGrid
 
+try:
+    from optimization.backtesting import BacktestEngine
+    from analysis.performance_metrics import PerformanceAnalyzer
+except ImportError:
+    # Alternative import for script execution
+    import sys
+    from pathlib import Path
+    
+    current_dir = Path(__file__).parent
+    src_dir = current_dir.parent if current_dir.name == 'optimization' else current_dir.parent / 'src'
+    if str(src_dir) not in sys.path:
+        sys.path.insert(0, str(src_dir))
+    
+    from optimization.backtesting import BacktestEngine
+    from analysis.performance_metrics import PerformanceAnalyzer
+
 logger = logging.getLogger(__name__)
 
 
