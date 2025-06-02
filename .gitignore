@@ -1,0 +1,360 @@
+# Stock Trading Optimization Project .gitignore
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+.pybuilder/
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# poetry
+poetry.lock
+
+# pdm
+.pdm.toml
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Project-specific ignores
+
+# Data directories (contain potentially large datasets)
+data/raw/
+data/processed/
+data/external/
+data/exports/
+
+# API cache (may contain sensitive data)
+data/raw/api_cache/
+cache/
+
+# Results and reports (can be regenerated)
+results/
+reports/figures/
+reports/tables/
+models/arima/predictions/
+models/dp_strategies/
+
+# Logs
+logs/
+*.log
+
+# Configuration files with sensitive data
+config.yaml
+.env
+secrets.yaml
+api_keys.txt
+
+# Temporary files
+temp/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Excel and CSV temp files
+~$*.xlsx
+~$*.xls
+~$*.csv
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# Model artifacts
+*.pkl
+*.pickle
+*.joblib
+*.h5
+*.hdf5
+
+# Large files (use Git LFS if needed)
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Documentation build
+docs/build/
+docs/_build/
+
+# Test artifacts
+.coverage
+htmlcov/
+.pytest_cache/
+test-results.xml
+
+# IDE and editor files
+*.sublime-project
+*.sublime-workspace
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment-specific configs
+config_local.yaml
+config_dev.yaml
+config_prod.yaml
+
+# Backup files
+*.backup
+backup_*/
+
+# Performance profiling
+*.prof
+*.cprofile
+
+# Memory profiling
+*.memprof
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Compiled translations
+*.mo
+
+# Local environment variables
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Project-specific temporary directories
+scratch/
+experiments/
+playground/
+
+# Docker
+.dockerignore
+Dockerfile
+docker-compose.yml
+.docker/
+
+# Kubernetes
+k8s/
+*.yaml
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Cloud provider specific
+.aws/
+.gcp/
+.azure/
+
+# Monitoring and logging
+monitoring/
+grafana/
+prometheus/
+
+# CI/CD
+.github/workflows/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+
+# Package managers
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# IDEs and editors
+.fleet/
+.nova/
+.netbeans/
+.eclipse/
+
+# JetBrains
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+Session.vim
+Sessionx.vim
+.netrwhist
+*~
+tags
+[._]*.un~
+
+# Sublime Text
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
+sftp-config.json
+Package Control.last-run
+Package Control.ca-list
+Package Control.ca-bundle
+Package Control.system-ca-bundle
+GitHub.sublime-settings
+
+# Atom
+.atom/
+
+# Code - OSS
+.vscode-oss/
+
+# Additional project-specific ignores
+# Add any project-specific files or directories that should be ignored
