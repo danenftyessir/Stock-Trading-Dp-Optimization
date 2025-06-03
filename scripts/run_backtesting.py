@@ -2,12 +2,6 @@
 """
 Backtesting Script for Stock Trading Optimization.
 Runs comprehensive backtesting analysis on trading strategies.
-FIXED: Resolved ImportError by using absolute imports and proper module path handling.
-
-Usage:
-    python scripts/run_backtesting.py --strategy dp --k-values 2 5 10
-    python scripts/run_backtesting.py --strategy all --symbols AAPL GOOGL
-    python scripts/run_backtesting.py --optimization --k-range 1 20
 """
 
 import sys
@@ -19,18 +13,15 @@ from datetime import datetime
 from pathlib import Path
 import json
 
-# FIXED: Proper module path setup for direct script execution
 script_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(script_dir)
 src_path = os.path.join(project_root, 'src')
 
-# Add both project root and src to Python path
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 if src_path not in sys.path:
     sys.path.insert(0, src_path)
 
-# FIXED: Use absolute imports to avoid relative import issues
 try:
     from optimization.backtesting import BacktestEngine, BacktestConfig
     from optimization.parameter_tuning import DPParameterOptimizer, OptimizationConfig

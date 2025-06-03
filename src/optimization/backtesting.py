@@ -1,7 +1,6 @@
 """
 Comprehensive Backtesting Framework for Trading Strategies.
 Supports walk-forward analysis, out-of-sample testing, and performance evaluation.
-FIXED: Resolved ImportError by using absolute imports with fallback handling.
 """
 
 import pandas as pd
@@ -12,7 +11,6 @@ import logging
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
 
-# FIXED: Import handling to avoid relative import issues
 try:
     # Try absolute imports first
     from models.dynamic_programing import DynamicProgrammingTrader
@@ -113,7 +111,6 @@ class DPTradingStrategy(TradingStrategy):
 class BacktestEngine:
     """
     Comprehensive backtesting engine with multiple evaluation modes.
-    FIXED: Enhanced error handling for missing dependencies.
     """
     
     def __init__(self, config: BacktestConfig):
@@ -630,7 +627,6 @@ class BacktestEngine:
                           dates: Optional[List[str]] = None) -> Dict:
         """
         Calculate performance metrics with fallback for missing analyzer.
-        FIXED: Fallback calculation when PerformanceAnalyzer is not available.
         """
         if self.performance_analyzer is not None:
             try:
@@ -699,7 +695,6 @@ class BacktestEngine:
 class BacktestRunner:
     """
     High-level interface for running comprehensive backtests.
-    FIXED: Enhanced error handling for missing dependencies.
     """
     
     def __init__(self, config: BacktestConfig):

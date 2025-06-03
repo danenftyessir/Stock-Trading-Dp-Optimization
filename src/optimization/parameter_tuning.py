@@ -1,6 +1,5 @@
 """
 Parameter Optimization Module for Trading Strategies.
-FIXED VERSION - Added proper sensitivity analysis output generation.
 """
 
 import numpy as np
@@ -115,7 +114,7 @@ class ParameterOptimizer:
             if np.isnan(score) or np.isinf(score):
                 score = float('-inf')
             
-            # FIXED: Cap score to reasonable range based on metric type
+            # Cap score to reasonable range based on metric type
             if self.config.objective_metric == 'sharpe_ratio':
                 score = max(-5.0, min(5.0, score))
             elif self.config.objective_metric == 'total_return':
@@ -279,7 +278,6 @@ class ParameterOptimizer:
 class DPParameterOptimizer(ParameterOptimizer):
     """
     Specialized optimizer for Dynamic Programming strategy parameters.
-    FIXED: Added proper sensitivity analysis implementation.
     """
     
     def _create_strategy(self, params: Dict):
@@ -329,7 +327,6 @@ class DPParameterOptimizer(ParameterOptimizer):
                            symbol: str = "UNKNOWN") -> Dict:
         """
         Perform sensitivity analysis around base parameters.
-        FIXED: Enhanced sensitivity analysis with proper output generation.
         
         Args:
             data (pd.DataFrame): Stock data
@@ -383,7 +380,7 @@ class DPParameterOptimizer(ParameterOptimizer):
                 'range_impact': (max(param_scores) - min(param_scores)) if param_scores else 0
             }
         
-        # FIXED: Save sensitivity analysis results to proper directory
+        # Save sensitivity analysis results to proper directory
         self._save_sensitivity_results(sensitivity_results, symbol)
         
         return {
@@ -397,7 +394,6 @@ class DPParameterOptimizer(ParameterOptimizer):
     def _save_sensitivity_results(self, sensitivity_results: Dict, symbol: str):
         """
         Save sensitivity analysis results to the proper directory.
-        FIXED: Ensure output directory exists and save results.
         """
         try:
             # Create output directory
@@ -484,7 +480,6 @@ class DPParameterOptimizer(ParameterOptimizer):
                                 k_range: Tuple[int, int] = (1, 20)) -> Dict:
         """
         Perform comprehensive analysis of k parameter impact.
-        FIXED: Complete analysis with sensitivity and visualization data.
         
         Args:
             data (pd.DataFrame): Stock data
@@ -628,7 +623,6 @@ def run_k_sensitivity_study(stock_data: Dict[str, pd.DataFrame],
                            k_range: Tuple[int, int] = (1, 20)) -> Dict:
     """
     Run comprehensive k parameter sensitivity study across multiple stocks.
-    FIXED: Generate proper output in sensitivity analysis directory.
     
     Args:
         stock_data (Dict[str, pd.DataFrame]): Stock data dictionary

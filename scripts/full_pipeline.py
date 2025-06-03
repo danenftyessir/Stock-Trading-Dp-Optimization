@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """
 Full Pipeline for Dynamic Programming Stock Trading Optimization.
-Implements the complete workflow described in the research paper.
-FIXED: Resolved ImportError by using absolute imports and proper module path handling.
 """
 
 import sys
@@ -18,18 +16,15 @@ import seaborn as sns
 import json
 import argparse
 
-# FIXED: Proper module path setup for direct script execution
 script_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(script_dir)
 src_path = os.path.join(project_root, 'src')
 
-# Add both project root and src to Python path
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 if src_path not in sys.path:
     sys.path.insert(0, src_path)
 
-# FIXED: Use absolute imports with fallback handling
 try:
     from data.api_client import AlphaVantageClient, DataValidator
     from models.dynamic_programing import DynamicProgrammingTrader
@@ -45,7 +40,6 @@ except ImportError as e:
 class StockTradingOptimizationPipeline:
     """
     Complete pipeline for stock trading optimization using Dynamic Programming.
-    FIXED: Enhanced error handling and proper import management.
     """
 
     def __init__(self, config_path: str = "config.yaml"):

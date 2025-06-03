@@ -14,7 +14,6 @@ logger = logging.getLogger(__name__)
 class DynamicProgrammingTrader:
     """
     Dynamic Programming trader for optimal k-transaction profit maximization.
-    FIXED: Corrected DP implementation with proper state tracking and trade reconstruction.
     """
     
     def __init__(self, max_transactions: int, transaction_cost: float = 0.001):
@@ -32,7 +31,6 @@ class DynamicProgrammingTrader:
     def optimize_profit(self, prices: List[float]) -> Tuple[float, List[Dict]]:
         """
         Find optimal trading strategy using Dynamic Programming.
-        FIXED: Corrected DP implementation with proper state transitions.
         
         Args:
             prices (List[float]): Daily stock prices
@@ -60,7 +58,6 @@ class DynamicProgrammingTrader:
         if k >= n // 2:
             return self._unlimited_transactions(prices)
         
-        # FIXED: Corrected DP table initialization and computation
         # buy[i][t] = max profit after at most t transactions, currently holding stock on day i
         # sell[i][t] = max profit after at most t transactions, not holding stock on day i
         buy = np.full((n, k + 1), -np.inf)
@@ -109,7 +106,6 @@ class DynamicProgrammingTrader:
     def _unlimited_transactions(self, prices: List[float]) -> Tuple[float, List[Dict]]:
         """
         Handle unlimited transactions case (k >= n//2).
-        FIXED: More conservative approach to unlimited transactions.
         """
         total_profit = 0
         trades = []
@@ -159,7 +155,6 @@ class DynamicProgrammingTrader:
                                     sell: np.ndarray, k: int, n: int) -> List[Dict]:
         """
         Reconstruct optimal trades from DP table.
-        FIXED: Corrected trade reconstruction algorithm.
         """
         trades = []
         i = n - 1
@@ -260,7 +255,6 @@ class DynamicProgrammingTrader:
                 initial_capital: float = 100000) -> Dict:
         """
         Perform comprehensive backtesting of the DP strategy.
-        FIXED: More realistic backtesting with proper validation.
         
         Args:
             prices (List[float]): Historical stock prices
@@ -312,7 +306,6 @@ class DynamicProgrammingTrader:
                                     initial_capital: float = 100000) -> List[float]:
         """
         Simulate portfolio performance with realistic constraints.
-        FIXED: More accurate simulation with proper trade execution.
         """
         portfolio_values = []
         cash = initial_capital
@@ -469,7 +462,6 @@ class DynamicProgrammingTrader:
 class DPPortfolioOptimizer:
     """
     Portfolio-level optimizer using Dynamic Programming for multiple stocks.
-    FIXED: Enhanced portfolio optimization with better risk management.
     """
     
     def __init__(self, max_transactions: int, transaction_cost: float = 0.001):
@@ -487,7 +479,6 @@ class DPPortfolioOptimizer:
     def optimize_portfolio(self, stock_data: Dict[str, List[float]]) -> Dict:
         """
         Optimize trading strategy for a portfolio of stocks.
-        FIXED: Better portfolio optimization with risk considerations.
         
         Args:
             stock_data (Dict[str, List[float]]): Stock symbol -> price list mapping
@@ -568,7 +559,6 @@ class DPPortfolioOptimizer:
                           dates: Optional[List[str]] = None) -> Dict:
         """
         Perform portfolio-level backtesting.
-        FIXED: Enhanced portfolio backtesting with better validation.
         
         Args:
             stock_data (Dict[str, List[float]]): Stock data

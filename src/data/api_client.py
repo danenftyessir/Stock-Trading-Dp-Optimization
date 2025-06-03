@@ -1,6 +1,5 @@
 """
 Alpha Vantage API Client for stock data acquisition.
-FIXED: Improved split detection logic and more accurate adjusted close price calculations.
 """
 
 import requests
@@ -20,7 +19,6 @@ logger = logging.getLogger(__name__)
 class AlphaVantageClient:
     """
     Client for Alpha Vantage API with improved data processing.
-    FIXED: More conservative split detection and better adjusted close calculation.
     """
     
     def __init__(self, api_key: str, cache_dir: str = "data/raw/api_cache",
@@ -205,9 +203,7 @@ class AlphaVantageClient:
     
     def parse_daily_data(self, api_response: Dict) -> Optional[pd.DataFrame]:
         """
-        Parse Alpha Vantage daily data response into pandas DataFrame.
-        FIXED: More conservative adjusted close price calculation with improved split detection.
-        
+        Parse Alpha Vantage daily data response into pandas DataFrame.        
         Args:
             api_response (Dict): Raw API response
             
@@ -251,7 +247,7 @@ class AlphaVantageClient:
             # Sort by date (oldest first)
             df = df.sort_index()
             
-            # FIXED: More conservative adjusted close price calculation
+            # Conservative adjusted close price calculation
             df['adjusted_close'] = self._calculate_adjusted_close_conservative(df)
             
             # Add placeholder values for compatibility
@@ -277,7 +273,6 @@ class AlphaVantageClient:
     def _calculate_adjusted_close_conservative(self, df: pd.DataFrame) -> pd.Series:
         """
         Calculate adjusted close price with more conservative split detection.
-        FIXED: More conservative approach to avoid false positives in split detection.
         
         Args:
             df (pd.DataFrame): DataFrame with OHLCV data
@@ -440,7 +435,6 @@ class AlphaVantageClient:
 class DataValidator:
     """
     Enhanced validator for stock data quality and completeness.
-    FIXED: Better validation logic for conservative adjusted close calculations.
     """
     
     @staticmethod
@@ -449,7 +443,6 @@ class DataValidator:
                           config_end_date: Optional[str] = None) -> Dict[str, any]:
         """
         Validate stock data quality and return validation report.
-        FIXED: Enhanced validation with conservative adjusted close price checks.
         
         Args:
             df (pd.DataFrame): Stock data to validate
@@ -517,7 +510,7 @@ class DataValidator:
                 report['warnings'].append("Low price greater than open/close detected")
                 quality_score -= 5.0
         
-        # FIXED: More conservative validation for adjusted close vs close relationship
+        # Validation for adjusted close vs close relationship
         if 'adjusted_close' in df.columns and 'close' in df.columns:
             adj_close_ratio = (df['adjusted_close'] / df['close']).fillna(1.0)
             

@@ -1,17 +1,12 @@
 """
 ARIMA Model Implementation for Stock Price Forecasting.
-FIXED: Enhanced model selection and validation for better statistical significance.
-REVISED: Improved model quality assessment and recommendations based on user feedback.
-COMPLETED: Finalized ARIMAPortfolioForecaster and removed dummy/hardcoded values.
 """
 
 import numpy as np
 import pandas as pd
 from statsmodels.tsa.arima.model import ARIMA
 from statsmodels.tsa.stattools import adfuller
-# Removed unused acf, pacf, plot_acf, plot_pacf to clean up imports
 from sklearn.metrics import mean_squared_error, mean_absolute_error
-# Removed unused matplotlib and seaborn imports as plotting is not done in this module
 from typing import Tuple, List, Dict, Optional
 import warnings
 import logging
@@ -43,10 +38,10 @@ class ARIMAPredictor:
         self.significance_level = significance_level
         self.best_order: Optional[Tuple[int, int, int]] = None
         self.model: Optional[ARIMA] = None
-        self.fitted_model: Optional[any] = None # statsmodels.tsa.statespace.mlemodel.MLEResultsWrapper
+        self.fitted_model: Optional[any] = None 
         self.training_data: Optional[pd.Series] = None
         self.is_fitted: bool = False
-        self.evaluation_metrics: Dict[str, any] = {} # To store evaluation metrics
+        self.evaluation_metrics: Dict[str, any] = {}
         self.parameter_search_results: Optional[pd.DataFrame] = None
 
         

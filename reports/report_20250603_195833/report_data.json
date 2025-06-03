@@ -1,0 +1,1301 @@
+{
+  "title": "Stock Trading Optimization Analysis Report",
+  "author": "Stock Trading Optimization System",
+  "timestamp": "2025-06-03T19:58:35.618137",
+  "input_source": "results\\backtesting\\20250603_195526",
+  "performance": {
+    "title": "Performance Analysis Report",
+    "timestamp": "2025-06-03T19:58:33.240107",
+    "symbols_analyzed": [
+      "AAPL",
+      "GOOGL",
+      "MSFT",
+      "TSLA",
+      "AMZN",
+      "META",
+      "NFLX",
+      "NVDA",
+      "JPM",
+      "JNJ"
+    ],
+    "strategies_tested": [
+      "DP_K2",
+      "DP_K5",
+      "DP_K10",
+      "BuyHold",
+      "MA_Crossover",
+      "Momentum"
+    ],
+    "performance_summary": {
+      "DP_K2": {
+        "mean_return": 0.5437502705308619,
+        "mean_sharpe": 1.4543769208995163,
+        "mean_drawdown": 0.00187423063802746,
+        "std_return": 0.26990896382027835,
+        "best_symbol": "NFLX",
+        "worst_symbol": "JNJ"
+      },
+      "DP_K5": {
+        "mean_return": 2.769234278897853,
+        "mean_sharpe": 2.831830060447465,
+        "mean_drawdown": 0.00202587782554313,
+        "std_return": 2.27686271703003,
+        "best_symbol": "TSLA",
+        "worst_symbol": "JNJ"
+      },
+      "DP_K10": {
+        "mean_return": 17.946990962984408,
+        "mean_sharpe": 4.368083530704739,
+        "mean_drawdown": 0.0021427544548522997,
+        "std_return": 25.383455492970555,
+        "best_symbol": "TSLA",
+        "worst_symbol": "JNJ"
+      },
+      "BuyHold": {
+        "mean_return": -0.11050298535825917,
+        "mean_sharpe": 0.09000948252411928,
+        "mean_drawdown": 0.6205601089407354,
+        "std_return": 0.5488775813497709,
+        "best_symbol": "NFLX",
+        "worst_symbol": "AMZN"
+      },
+      "MA_Crossover": {
+        "mean_return": -0.013869816016986728,
+        "mean_sharpe": -1.7192101156849655,
+        "mean_drawdown": 0.04662912920712974,
+        "std_return": 0.05460515675085441,
+        "best_symbol": "META",
+        "worst_symbol": "TSLA"
+      },
+      "Momentum": {
+        "mean_return": 0.301588453501071,
+        "mean_sharpe": 0.1548837998655285,
+        "mean_drawdown": 0.39927981776297716,
+        "std_return": 1.15258509020395,
+        "best_symbol": "NVDA",
+        "worst_symbol": "AMZN"
+      }
+    },
+    "detailed_metrics": {
+      "AAPL": {
+        "DP_K2": {
+          "total_return": 0.478854646606718,
+          "annualized_return": 0.11009837166635639,
+          "volatility": 0.05678341647370757,
+          "sharpe_ratio": 1.5151378993633255,
+          "max_drawdown": 0.0013207752647151937,
+          "number_of_trades": 22,
+          "win_rate": 0.9545454545454546
+        },
+        "DP_K5": {
+          "total_return": 1.7739345392577774,
+          "annualized_return": 0.3130587474629343,
+          "volatility": 0.08757787190497611,
+          "sharpe_ratio": 2.9259123318167317,
+          "max_drawdown": 0.002415659134534434,
+          "number_of_trades": 41,
+          "win_rate": 0.926829268292683
+        },
+        "DP_K10": {
+          "total_return": 5.5101408436971235,
+          "annualized_return": 0.6488732166626336,
+          "volatility": 0.10854129340112295,
+          "sharpe_ratio": 4.4808184800206385,
+          "max_drawdown": 0.001504962297201246,
+          "number_of_trades": 82,
+          "win_rate": 1.0
+        },
+        "BuyHold": {
+          "total_return": -0.0959362101138326,
+          "annualized_return": -0.02656405217070501,
+          "volatility": 0.20599996503279858,
+          "sharpe_ratio": -0.12495025700049507,
+          "max_drawdown": 0.33645630564786627,
+          "number_of_trades": 10,
+          "win_rate": 0.4
+        },
+        "MA_Crossover": {
+          "total_return": 0.017457094026318083,
+          "annualized_return": 0.004630635753496426,
+          "volatility": 0.006523391000469567,
+          "sharpe_ratio": -2.3544313805488715,
+          "max_drawdown": 0.0009990009990008548,
+          "number_of_trades": 0,
+          "win_rate": 0
+        },
+        "Momentum": {
+          "total_return": 0.09264899523377215,
+          "annualized_return": 0.02393498631031976,
+          "volatility": 0.1321579683495811,
+          "sharpe_ratio": 0.09348358021593495,
+          "max_drawdown": 0.18629771692272204,
+          "number_of_trades": 24,
+          "win_rate": 0.25
+        }
+      },
+      "GOOGL": {
+        "DP_K2": {
+          "total_return": 0.4969223873126524,
+          "annualized_return": 0.11370277110658034,
+          "volatility": 0.06601555853977269,
+          "sharpe_ratio": 1.3605763114477085,
+          "max_drawdown": 0.0027836129010377023,
+          "number_of_trades": 23,
+          "win_rate": 0.9130434782608695
+        },
+        "DP_K5": {
+          "total_return": 1.7811543179438507,
+          "annualized_return": 0.31397018414655276,
+          "volatility": 0.09779800259361936,
+          "sharpe_ratio": 2.636456257549199,
+          "max_drawdown": 0.0017739762777862177,
+          "number_of_trades": 45,
+          "win_rate": 0.9777777777777777
+        },
+        "DP_K10": {
+          "total_return": 4.996435883106303,
+          "annualized_return": 0.6130875118391943,
+          "volatility": 0.11068291516969588,
+          "sharpe_ratio": 4.19746744924606,
+          "max_drawdown": 0.002702009605310326,
+          "number_of_trades": 77,
+          "win_rate": 0.987012987012987
+        },
+        "BuyHold": {
+          "total_return": -0.9198109685818181,
+          "annualized_return": -0.49013591714626215,
+          "volatility": 0.5622505299157761,
+          "sharpe_ratio": -0.18497474003178585,
+          "max_drawdown": 0.9705533473105673,
+          "number_of_trades": 12,
+          "win_rate": 0.6666666666666666
+        },
+        "MA_Crossover": {
+          "total_return": -0.011971751621375879,
+          "annualized_return": -0.0032099699629478673,
+          "volatility": 0.022362782534041285,
+          "sharpe_ratio": -1.0269166159499503,
+          "max_drawdown": 0.02833720630002576,
+          "number_of_trades": 0,
+          "win_rate": 0
+        },
+        "Momentum": {
+          "total_return": 0.41354185706604357,
+          "annualized_return": 0.0967932598483292,
+          "volatility": 0.16306578798671828,
+          "sharpe_ratio": 0.5253432685075964,
+          "max_drawdown": 0.17199333738661604,
+          "number_of_trades": 20,
+          "win_rate": 0.45
+        }
+      },
+      "MSFT": {
+        "DP_K2": {
+          "total_return": 0.3805691530768876,
+          "annualized_return": 0.0899044068199637,
+          "volatility": 0.04370912289781496,
+          "sharpe_ratio": 1.533857465674467,
+          "max_drawdown": 0.0009990009990009491,
+          "number_of_trades": 19,
+          "win_rate": 1.0
+        },
+        "DP_K5": {
+          "total_return": 1.3335561410429546,
+          "annualized_return": 0.2538401164983315,
+          "volatility": 0.07264488424058627,
+          "sharpe_ratio": 2.875607749090741,
+          "max_drawdown": 0.002782074107672822,
+          "number_of_trades": 41,
+          "win_rate": 0.975609756097561
+        },
+        "DP_K10": {
+          "total_return": 4.452846356320142,
+          "annualized_return": 0.5726821415503363,
+          "volatility": 0.10425777458243561,
+          "sharpe_ratio": 4.205898368917563,
+          "max_drawdown": 0.0028461647312161284,
+          "number_of_trades": 76,
+          "win_rate": 0.9868421052631579
+        },
+        "BuyHold": {
+          "total_return": 0.35225297724130183,
+          "annualized_return": 0.08389149297043286,
+          "volatility": 0.2569139277068236,
+          "sharpe_ratio": 0.36411739949558153,
+          "max_drawdown": 0.40503205179591567,
+          "number_of_trades": 14,
+          "win_rate": 0.5714285714285714
+        },
+        "MA_Crossover": {
+          "total_return": 0.014071953692698152,
+          "annualized_return": 0.003737277128045058,
+          "volatility": 0.01902843607937259,
+          "sharpe_ratio": -0.845479801793126,
+          "max_drawdown": 0.03603249172664362,
+          "number_of_trades": 0,
+          "win_rate": 0
+        },
+        "Momentum": {
+          "total_return": -0.05589829238044375,
+          "annualized_return": -0.01523799173791407,
+          "volatility": 0.1354485872467131,
+          "sharpe_ratio": -0.19285331224010527,
+          "max_drawdown": 0.2700446192174847,
+          "number_of_trades": 31,
+          "win_rate": 0.2903225806451613
+        }
+      },
+      "TSLA": {
+        "DP_K2": {
+          "total_return": 0.7035068705130747,
+          "annualized_return": 0.1528081953870719,
+          "volatility": 0.09178422449732881,
+          "sharpe_ratio": 1.375601922307349,
+          "max_drawdown": 0.0021756911261856574,
+          "number_of_trades": 16,
+          "win_rate": 0.9375
+        },
+        "DP_K5": {
+          "total_return": 8.037495923407917,
+          "annualized_return": 0.7997667906105079,
+          "volatility": 0.203267564317886,
+          "sharpe_ratio": 2.891465327407217,
+          "max_drawdown": 0.002175691126185581,
+          "number_of_trades": 45,
+          "win_rate": 0.9777777777777777
+        },
+        "DP_K10": {
+          "total_return": 80.08317595808802,
+          "annualized_return": 2.2328640834323785,
+          "volatility": 0.26557086383660633,
+          "sharpe_ratio": 4.478932334732145,
+          "max_drawdown": 0.0021756911261857554,
+          "number_of_trades": 85,
+          "win_rate": 0.9882352941176471
+        },
+        "BuyHold": {
+          "total_return": 0.5095049528084095,
+          "annualized_return": 0.11619411781649536,
+          "volatility": 0.49938437070505387,
+          "sharpe_ratio": 0.42857284400444423,
+          "max_drawdown": 0.5274691621779818,
+          "number_of_trades": 11,
+          "win_rate": 0.45454545454545453
+        },
+        "MA_Crossover": {
+          "total_return": -0.11694457246424281,
+          "annualized_return": -0.03265468462509202,
+          "volatility": 0.046521668966913864,
+          "sharpe_ratio": -1.1199367259814497,
+          "max_drawdown": 0.11694457246424281,
+          "number_of_trades": 0,
+          "win_rate": 0
+        },
+        "Momentum": {
+          "total_return": -0.17545099869265002,
+          "annualized_return": -0.05019586126683806,
+          "volatility": 0.46247161029197514,
+          "sharpe_ratio": 0.19786766664290475,
+          "max_drawdown": 0.7560648682921767,
+          "number_of_trades": 37,
+          "win_rate": 0.24324324324324326
+        }
+      },
+      "AMZN": {
+        "DP_K2": {
+          "total_return": 0.49611951960807144,
+          "annualized_return": 0.11354328313099948,
+          "volatility": 0.06016836256467821,
+          "sharpe_ratio": 1.4846330763897582,
+          "max_drawdown": 0.001769997016494979,
+          "number_of_trades": 20,
+          "win_rate": 0.9
+        },
+        "DP_K5": {
+          "total_return": 2.287049411945151,
+          "annualized_return": 0.37391854558586535,
+          "volatility": 0.11717042056674132,
+          "sharpe_ratio": 2.5982888749785324,
+          "max_drawdown": 0.0022860676738674793,
+          "number_of_trades": 43,
+          "win_rate": 0.9767441860465116
+        },
+        "DP_K10": {
+          "total_return": 9.057010498835329,
+          "annualized_return": 0.8518603120081722,
+          "volatility": 0.14411097846253085,
+          "sharpe_ratio": 4.2118297691190545,
+          "max_drawdown": 0.0018141992948611635,
+          "number_of_trades": 78,
+          "win_rate": 0.9871794871794872
+        },
+        "BuyHold": {
+          "total_return": -0.9658138005187524,
+          "annualized_return": -0.593918953562695,
+          "volatility": 0.5870858440326888,
+          "sharpe_ratio": -0.5582683566023897,
+          "max_drawdown": 0.9805071250940429,
+          "number_of_trades": 12,
+          "win_rate": 0.4166666666666667
+        },
+        "MA_Crossover": {
+          "total_return": -0.07402928355979005,
+          "annualized_return": -0.020322430031390892,
+          "volatility": 0.04318713884390247,
+          "sharpe_ratio": -0.9169374183346307,
+          "max_drawdown": 0.10259285237401972,
+          "number_of_trades": 0,
+          "win_rate": 0
+        },
+        "Momentum": {
+          "total_return": -0.9348775361532237,
+          "annualized_return": -0.5176897977523263,
+          "volatility": 0.5231583545723181,
+          "sharpe_ratio": -0.3655378049099631,
+          "max_drawdown": 0.9548873251174099,
+          "number_of_trades": 24,
+          "win_rate": 0.2916666666666667
+        }
+      },
+      "META": {
+        "DP_K2": {
+          "total_return": 0.5979297431617533,
+          "annualized_return": 0.13328606932144704,
+          "volatility": 0.0683670158525093,
+          "sharpe_ratio": 1.5712991463891746,
+          "max_drawdown": 0.0025593720604261973,
+          "number_of_trades": 19,
+          "win_rate": 0.9473684210526315
+        },
+        "DP_K5": {
+          "total_return": 2.2600427894479944,
+          "annualized_return": 0.3708960500685694,
+          "volatility": 0.1041475353195086,
+          "sharpe_ratio": 2.8894165208739295,
+          "max_drawdown": 0.002559372060426316,
+          "number_of_trades": 46,
+          "win_rate": 0.9130434782608695
+        },
+        "DP_K10": {
+          "total_return": 9.801495447628062,
+          "annualized_return": 0.8875029878949616,
+          "volatility": 0.14355877290214206,
+          "sharpe_ratio": 4.361039743969285,
+          "max_drawdown": 0.0025593720604263023,
+          "number_of_trades": 82,
+          "win_rate": 0.9634146341463414
+        },
+        "BuyHold": {
+          "total_return": -0.25281792131192915,
+          "annualized_return": -0.07485182336896246,
+          "volatility": 0.4040066567420037,
+          "sharpe_ratio": -0.03403642701992367,
+          "max_drawdown": 0.7855124016008633,
+          "number_of_trades": 10,
+          "win_rate": 0.5
+        },
+        "MA_Crossover": {
+          "total_return": 0.08155168386802222,
+          "annualized_return": 0.021148472308775812,
+          "volatility": 0.04413173117955934,
+          "sharpe_ratio": 0.04293765160349618,
+          "max_drawdown": 0.05041902296109558,
+          "number_of_trades": 0,
+          "win_rate": 0
+        },
+        "Momentum": {
+          "total_return": -0.053179440783527245,
+          "annualized_return": -0.014481736038765458,
+          "volatility": 0.2916366194107703,
+          "sharpe_ratio": 0.027886404922009913,
+          "max_drawdown": 0.6449733158883504,
+          "number_of_trades": 32,
+          "win_rate": 0.21875
+        }
+      },
+      "NFLX": {
+        "DP_K2": {
+          "total_return": 1.1553286205015476,
+          "annualized_return": 0.22752725919037697,
+          "volatility": 0.12212929800932024,
+          "sharpe_ratio": 1.5723753025911376,
+          "max_drawdown": 0.002115896346742621,
+          "number_of_trades": 26,
+          "win_rate": 0.9615384615384616
+        },
+        "DP_K5": {
+          "total_return": 2.9655186793779147,
+          "annualized_return": 0.44449378612357915,
+          "volatility": 0.13460867030501994,
+          "sharpe_ratio": 2.6488249908556427,
+          "max_drawdown": 0.0011180122430893503,
+          "number_of_trades": 48,
+          "win_rate": 1.0
+        },
+        "DP_K10": {
+          "total_return": 13.587969894848175,
+          "annualized_return": 1.0451607109245118,
+          "volatility": 0.17832976136567263,
+          "sharpe_ratio": 3.9904157118259804,
+          "max_drawdown": 0.001777142222173037,
+          "number_of_trades": 78,
+          "win_rate": 0.9871794871794872
+        },
+        "BuyHold": {
+          "total_return": 0.5820852646349058,
+          "annualized_return": 0.1302753314570475,
+          "volatility": 0.3952891771807526,
+          "sharpe_ratio": 0.46814439518306944,
+          "max_drawdown": 0.606581758356049,
+          "number_of_trades": 13,
+          "win_rate": 0.6153846153846154
+        },
+        "MA_Crossover": {
+          "total_return": -0.0009240993308470934,
+          "annualized_return": -0.00024677113239002235,
+          "volatility": 0.007327617040522364,
+          "sharpe_ratio": -2.759417917439203,
+          "max_drawdown": 0.010904746612337767,
+          "number_of_trades": 0,
+          "win_rate": 0
+        },
+        "Momentum": {
+          "total_return": 0.30064400593279367,
+          "annualized_return": 0.07269066155644888,
+          "volatility": 0.22838960838150718,
+          "sharpe_ratio": 0.3325042596454367,
+          "max_drawdown": 0.3831155234590067,
+          "number_of_trades": 29,
+          "win_rate": 0.3448275862068966
+        }
+      },
+      "NVDA": {
+        "DP_K2": {
+          "total_return": 0.6741698181980336,
+          "annualized_return": 0.14747462140601364,
+          "volatility": 0.07003071241398601,
+          "sharpe_ratio": 1.713357321045097,
+          "max_drawdown": 0.000999000999000955,
+          "number_of_trades": 20,
+          "win_rate": 1.0
+        },
+        "DP_K5": {
+          "total_return": 5.457018721486119,
+          "annualized_return": 0.6452707171083325,
+          "volatility": 0.1536042429040245,
+          "sharpe_ratio": 3.188439792289824,
+          "max_drawdown": 0.0009990009990009652,
+          "number_of_trades": 38,
+          "win_rate": 1.0
+        },
+        "DP_K10": {
+          "total_return": 46.371785092255834,
+          "annualized_return": 1.8007772972393856,
+          "volatility": 0.21425126527045477,
+          "sharpe_ratio": 4.826650873027123,
+          "max_drawdown": 0.0023929281124243024,
+          "number_of_trades": 77,
+          "win_rate": 0.987012987012987
+        },
+        "BuyHold": {
+          "total_return": -0.46355865485266734,
+          "annualized_return": -0.15317008402401466,
+          "volatility": 0.6721642897200018,
+          "sharpe_ratio": 0.4499393458684046,
+          "max_drawdown": 0.920869399203814,
+          "number_of_trades": 11,
+          "win_rate": 0.6363636363636364
+        },
+        "MA_Crossover": {
+          "total_return": -0.046941744490215494,
+          "annualized_return": -0.01275270097916803,
+          "volatility": 0.036028089454288495,
+          "sharpe_ratio": -0.8931155672542951,
+          "max_drawdown": 0.0779733523212219,
+          "number_of_trades": 0,
+          "win_rate": 0
+        },
+        "Momentum": {
+          "total_return": 3.414653488908502,
+          "annualized_return": 0.48646472138641483,
+          "volatility": 0.3231090638961751,
+          "sharpe_ratio": 1.322277882967878,
+          "max_drawdown": 0.2681243315354681,
+          "number_of_trades": 33,
+          "win_rate": 0.36363636363636365
+        }
+      },
+      "JPM": {
+        "DP_K2": {
+          "total_return": 0.23855678937841177,
+          "annualized_return": 0.058775363617739496,
+          "volatility": 0.03002915773082317,
+          "sharpe_ratio": 1.2509618066207802,
+          "max_drawdown": 0.0013750313750003251,
+          "number_of_trades": 19,
+          "win_rate": 0.9473684210526315
+        },
+        "DP_K5": {
+          "total_return": 1.1420826778506865,
+          "annualized_return": 0.22550884768221513,
+          "volatility": 0.06248751090622049,
+          "sharpe_ratio": 2.9663541261046085,
+          "max_drawdown": 0.0015588201704929683,
+          "number_of_trades": 40,
+          "win_rate": 0.95
+        },
+        "DP_K10": {
+          "total_return": 3.9335455449022354,
+          "annualized_return": 0.5312223005210517,
+          "volatility": 0.08641028910833295,
+          "sharpe_ratio": 4.74600388567093,
+          "max_drawdown": 0.000999000999000957,
+          "number_of_trades": 76,
+          "win_rate": 1.0
+        },
+        "BuyHold": {
+          "total_return": 0.20306603552984406,
+          "annualized_return": 0.050589860354345983,
+          "volatility": 0.20565909230973287,
+          "sharpe_ratio": 0.24555808210828658,
+          "max_drawdown": 0.4167854545746273,
+          "number_of_trades": 11,
+          "win_rate": 0.45454545454545453
+        },
+        "MA_Crossover": {
+          "total_return": -0.007598462143916549,
+          "annualized_return": -0.0020340771188487317,
+          "volatility": 0.0034495987366740316,
+          "sharpe_ratio": -6.386297779011919,
+          "max_drawdown": 0.007598462143916549,
+          "number_of_trades": 1,
+          "win_rate": 0.0
+        },
+        "Momentum": {
+          "total_return": 0.11860285362284324,
+          "annualized_return": 0.030371876614228244,
+          "volatility": 0.10100135466829058,
+          "sharpe_ratio": 0.14870157880622475,
+          "max_drawdown": 0.15496692653212987,
+          "number_of_trades": 23,
+          "win_rate": 0.30434782608695654
+        }
+      },
+      "JNJ": {
+        "DP_K2": {
+          "total_return": 0.2155451569514684,
+          "annualized_return": 0.05348795039400844,
+          "volatility": 0.027870279802441313,
+          "sharpe_ratio": 1.1659689571663647,
+          "max_drawdown": 0.002643928291670578,
+          "number_of_trades": 21,
+          "win_rate": 0.8571428571428571
+        },
+        "DP_K5": {
+          "total_return": 0.6544895872181619,
+          "annualized_return": 0.143858173205218,
+          "volatility": 0.0427602689481972,
+          "sharpe_ratio": 2.697534633508219,
+          "max_drawdown": 0.0025901044623756818,
+          "number_of_trades": 41,
+          "win_rate": 0.9512195121951219
+        },
+        "DP_K10": {
+          "total_return": 1.6755041101628618,
+          "annualized_return": 0.30045571845581676,
+          "volatility": 0.05847842512249529,
+          "sharpe_ratio": 4.181778690518613,
+          "max_drawdown": 0.0026560740997241556,
+          "number_of_trades": 68,
+          "win_rate": 0.9705882352941176
+        },
+        "BuyHold": {
+          "total_return": -0.05400152841805344,
+          "annualized_return": -0.014710233783002624,
+          "volatility": 0.15160066343170933,
+          "sharpe_ratio": -0.15400746076399915,
+          "max_drawdown": 0.2558340836456255,
+          "number_of_trades": 13,
+          "win_rate": 0.5384615384615384
+        },
+        "MA_Crossover": {
+          "total_return": 0.006631021853481943,
+          "annualized_return": 0.001765859840782369,
+          "volatility": 0.01935280689416955,
+          "sharpe_ratio": -0.9325056021397077,
+          "max_drawdown": 0.034489584168793226,
+          "number_of_trades": 0,
+          "win_rate": 0
+        },
+        "Momentum": {
+          "total_return": -0.10480039774340025,
+          "annualized_return": -0.029121122034309943,
+          "volatility": 0.08492915912931011,
+          "sharpe_ratio": -0.5408355259026321,
+          "max_drawdown": 0.2023302132784079,
+          "number_of_trades": 25,
+          "win_rate": 0.36
+        }
+      }
+    }
+  },
+  "comparison": {
+    "title": "Strategy Comparison Report",
+    "timestamp": "2025-06-03T19:58:33.245378",
+    "strategy_rankings": {
+      "Total_Return": {
+        "DP_K10": 17.946990962984408,
+        "DP_K5": 2.769234278897853,
+        "DP_K2": 0.5437502705308619,
+        "Momentum": 0.301588453501071,
+        "MA_Crossover": -0.01386981601698673,
+        "BuyHold": -0.11050298535825917
+      },
+      "Sharpe_Ratio": {
+        "DP_K10": 4.368083530704739,
+        "DP_K5": 2.8318300604474644,
+        "DP_K2": 1.454376920899516,
+        "Momentum": 0.1548837998655285,
+        "BuyHold": 0.0900094825241193,
+        "MA_Crossover": -1.7192101156849655
+      },
+      "Max_Drawdown": {
+        "DP_K2": 0.00187423063802746,
+        "DP_K5": 0.00202587782554313,
+        "DP_K10": 0.0021427544548523,
+        "MA_Crossover": 0.046629129207129735,
+        "Momentum": 0.3992798177629772,
+        "BuyHold": 0.6205601089407352
+      }
+    },
+    "pairwise_comparisons": {
+      "DP_K2_vs_DP_K5": {
+        "win_rate": 0.0,
+        "average_difference": -2.225484008366991,
+        "common_symbols": 10
+      },
+      "DP_K2_vs_DP_K10": {
+        "win_rate": 0.0,
+        "average_difference": -17.403240692453547,
+        "common_symbols": 10
+      },
+      "DP_K2_vs_BuyHold": {
+        "win_rate": 1.0,
+        "average_difference": 0.6542532558891211,
+        "common_symbols": 10
+      },
+      "DP_K2_vs_MA_Crossover": {
+        "win_rate": 1.0,
+        "average_difference": 0.5576200865478486,
+        "common_symbols": 10
+      },
+      "DP_K2_vs_Momentum": {
+        "win_rate": 0.9,
+        "average_difference": 0.24216181702979087,
+        "common_symbols": 10
+      },
+      "DP_K5_vs_DP_K10": {
+        "win_rate": 0.0,
+        "average_difference": -15.177756684086557,
+        "common_symbols": 10
+      },
+      "DP_K5_vs_BuyHold": {
+        "win_rate": 1.0,
+        "average_difference": 2.8797372642561117,
+        "common_symbols": 10
+      },
+      "DP_K5_vs_MA_Crossover": {
+        "win_rate": 1.0,
+        "average_difference": 2.7831040949148393,
+        "common_symbols": 10
+      },
+      "DP_K5_vs_Momentum": {
+        "win_rate": 1.0,
+        "average_difference": 2.4676458253967817,
+        "common_symbols": 10
+      },
+      "DP_K10_vs_BuyHold": {
+        "win_rate": 1.0,
+        "average_difference": 18.057493948342668,
+        "common_symbols": 10
+      },
+      "DP_K10_vs_MA_Crossover": {
+        "win_rate": 1.0,
+        "average_difference": 17.960860779001397,
+        "common_symbols": 10
+      },
+      "DP_K10_vs_Momentum": {
+        "win_rate": 1.0,
+        "average_difference": 17.64540250948334,
+        "common_symbols": 10
+      },
+      "BuyHold_vs_MA_Crossover": {
+        "win_rate": 0.4,
+        "average_difference": -0.09663316934127245,
+        "common_symbols": 10
+      },
+      "BuyHold_vs_Momentum": {
+        "win_rate": 0.5,
+        "average_difference": -0.4120914388593301,
+        "common_symbols": 10
+      },
+      "MA_Crossover_vs_Momentum": {
+        "win_rate": 0.5,
+        "average_difference": -0.3154582695180577,
+        "common_symbols": 10
+      }
+    },
+    "statistical_analysis": {}
+  },
+  "risk": {
+    "title": "Risk Analysis Report",
+    "timestamp": "2025-06-03T19:58:33.311058",
+    "risk_metrics": {
+      "DP_K2_AAPL": {
+        "volatility": 0.05678341647370757,
+        "skewness": 12.833295028992183,
+        "kurtosis": 217.89752473155616,
+        "var_95": 0.0,
+        "var_99": -0.000999000999000893,
+        "downside_deviation": 0.00015416623790771476
+      },
+      "DP_K5_AAPL": {
+        "volatility": 0.08757787190497611,
+        "skewness": 6.799133797407962,
+        "kurtosis": 58.936824886339224,
+        "var_95": 0.0,
+        "var_99": -0.0009990009990009333,
+        "downside_deviation": 0.00016479486510714443
+      },
+      "DP_K10_AAPL": {
+        "volatility": 0.10854129340112295,
+        "skewness": 4.3934041776803845,
+        "kurtosis": 25.442901545163938,
+        "var_95": -0.000999000999000876,
+        "var_99": -0.0009990009990009452,
+        "downside_deviation": 0.0001300474163320357
+      },
+      "BuyHold_AAPL": {
+        "volatility": 0.20599996503279858,
+        "skewness": 0.27750828800915667,
+        "kurtosis": 5.804407922471155,
+        "var_95": -0.023244585593978035,
+        "var_99": -0.03737093834902259,
+        "downside_deviation": 0.010695219867281279
+      },
+      "MA_Crossover_AAPL": {
+        "volatility": 0.006523391000469567,
+        "skewness": 24.79125225529495,
+        "kurtosis": 663.791533980714,
+        "var_95": 0.0,
+        "var_99": 0.0,
+        "downside_deviation": 0.0
+      },
+      "Momentum_AAPL": {
+        "volatility": 0.1321579683495811,
+        "skewness": 0.7536752695746273,
+        "kurtosis": 15.07099116255329,
+        "var_95": -0.009890855438716413,
+        "var_99": -0.030866231640637194,
+        "downside_deviation": 0.009807654357751425
+      },
+      "DP_K2_GOOGL": {
+        "volatility": 0.06601555853977269,
+        "skewness": 12.515219041109697,
+        "kurtosis": 179.49516447615025,
+        "var_95": 0.0,
+        "var_99": -0.0009990009990008847,
+        "downside_deviation": 5.890620730813333e-05
+      },
+      "DP_K5_GOOGL": {
+        "volatility": 0.09779800259361936,
+        "skewness": 7.345443291390552,
+        "kurtosis": 64.09014029639846,
+        "var_95": 0.0,
+        "var_99": -0.000999000999000919,
+        "downside_deviation": 0.00010696656934445069
+      },
+      "DP_K10_GOOGL": {
+        "volatility": 0.11068291516969588,
+        "skewness": 4.728280551563883,
+        "kurtosis": 27.661917087811663,
+        "var_95": -0.0009990009990008923,
+        "var_99": -0.0009990009990009515,
+        "downside_deviation": 8.54692838903235e-05
+      },
+      "BuyHold_GOOGL": {
+        "volatility": 0.5622505299157761,
+        "skewness": -20.483665317618126,
+        "kurtosis": 550.6585300208492,
+        "var_95": -0.028512719878675968,
+        "var_99": -0.046318499566112684,
+        "downside_deviation": 0.051398256029480754
+      },
+      "MA_Crossover_GOOGL": {
+        "volatility": 0.022362782534041285,
+        "skewness": -1.117231589950252,
+        "kurtosis": 351.9462500632987,
+        "var_95": 0.0,
+        "var_99": 0.0,
+        "downside_deviation": 0.009645824543338517
+      },
+      "Momentum_GOOGL": {
+        "volatility": 0.16306578798671828,
+        "skewness": 0.5067824185969655,
+        "kurtosis": 17.919464435881288,
+        "var_95": -0.013337353418589486,
+        "var_99": -0.03050413196037019,
+        "downside_deviation": 0.013180258257841165
+      },
+      "DP_K2_MSFT": {
+        "volatility": 0.04370912289781496,
+        "skewness": 9.377271821918502,
+        "kurtosis": 99.11038638846861,
+        "var_95": 0.0,
+        "var_99": -0.0009990009990008778,
+        "downside_deviation": 4.3333664084947234e-17
+      },
+      "DP_K5_MSFT": {
+        "volatility": 0.07264488424058627,
+        "skewness": 6.484607168490489,
+        "kurtosis": 53.26907440057362,
+        "var_95": 0.0,
+        "var_99": -0.0009990009990009307,
+        "downside_deviation": 0.00014609473046836265
+      },
+      "DP_K10_MSFT": {
+        "volatility": 0.10425777458243561,
+        "skewness": 5.127466627245176,
+        "kurtosis": 37.95831922700595,
+        "var_95": -0.0009990009990008698,
+        "var_99": -0.0009990009990009437,
+        "downside_deviation": 0.00010962668534649915
+      },
+      "BuyHold_MSFT": {
+        "volatility": 0.2569139277068236,
+        "skewness": 0.08903210904827452,
+        "kurtosis": 2.2453020055908586,
+        "var_95": -0.026757506053911147,
+        "var_99": -0.041454839256801095,
+        "downside_deviation": 0.011157545762228079
+      },
+      "MA_Crossover_MSFT": {
+        "volatility": 0.01902843607937259,
+        "skewness": -3.0590441078834756,
+        "kurtosis": 176.77248209956946,
+        "var_95": 0.0,
+        "var_99": -0.0005045007720990212,
+        "downside_deviation": 0.006339565983891106
+      },
+      "Momentum_MSFT": {
+        "volatility": 0.1354485872467131,
+        "skewness": -1.043540256955563,
+        "kurtosis": 13.106260861333121,
+        "var_95": -0.01349017116676579,
+        "var_99": -0.030449291972714863,
+        "downside_deviation": 0.010551059284507426
+      },
+      "DP_K2_TSLA": {
+        "volatility": 0.09178422449732881,
+        "skewness": 12.591448956137187,
+        "kurtosis": 176.31070254371156,
+        "var_95": 0.0,
+        "var_99": -0.00099900099900088,
+        "downside_deviation": 0.0001929308976168578
+      },
+      "DP_K5_TSLA": {
+        "volatility": 0.203267564317886,
+        "skewness": 7.572892931932074,
+        "kurtosis": 75.56363044573162,
+        "var_95": 0.0,
+        "var_99": -0.0009990009990009346,
+        "downside_deviation": 0.00011957465599782661
+      },
+      "DP_K10_TSLA": {
+        "volatility": 0.26557086383660633,
+        "skewness": 4.808181574738512,
+        "kurtosis": 30.592556955744197,
+        "var_95": -0.0009990009990008765,
+        "var_99": -0.0009990009990009472,
+        "downside_deviation": 8.790260113947635e-05
+      },
+      "BuyHold_TSLA": {
+        "volatility": 0.49938437070505387,
+        "skewness": 0.34301604671249547,
+        "kurtosis": 4.112937453240445,
+        "var_95": -0.05002053537403843,
+        "var_99": -0.08545948290210714,
+        "downside_deviation": 0.02356415378591296
+      },
+      "MA_Crossover_TSLA": {
+        "volatility": 0.046521668966913864,
+        "skewness": -6.369803032125002,
+        "kurtosis": 106.29767576385068,
+        "var_95": 0.0,
+        "var_99": -0.008391759231619045,
+        "downside_deviation": 0.012881071839971532
+      },
+      "Momentum_TSLA": {
+        "volatility": 0.46247161029197514,
+        "skewness": -12.562086344325111,
+        "kurtosis": 294.9759844333175,
+        "var_95": -0.03024546675184105,
+        "var_99": -0.05950668564950315,
+        "downside_deviation": 0.05104916319174238
+      },
+      "DP_K2_AMZN": {
+        "volatility": 0.06016836256467821,
+        "skewness": 11.745131803530269,
+        "kurtosis": 173.96363389797492,
+        "var_95": 0.0,
+        "var_99": -0.0009990009990008607,
+        "downside_deviation": 8.757182007428378e-05
+      },
+      "DP_K5_AMZN": {
+        "volatility": 0.11717042056674132,
+        "skewness": 8.885142036577351,
+        "kurtosis": 106.32600716192097,
+        "var_95": 0.0,
+        "var_99": -0.0009990009990009342,
+        "downside_deviation": 0.00011966467024157086
+      },
+      "DP_K10_AMZN": {
+        "volatility": 0.14411097846253085,
+        "skewness": 5.626838854193473,
+        "kurtosis": 46.76211771408318,
+        "var_95": -0.0009990009990008704,
+        "var_99": -0.0009990009990009517,
+        "downside_deviation": 0.00015722736541341756
+      },
+      "BuyHold_AMZN": {
+        "volatility": 0.5870858440326888,
+        "skewness": -17.80925306943337,
+        "kurtosis": 457.34428022179947,
+        "var_95": -0.03195747022723595,
+        "var_99": -0.05610935720580755,
+        "downside_deviation": 0.05019249909691789
+      },
+      "MA_Crossover_AMZN": {
+        "volatility": 0.04318713884390247,
+        "skewness": 1.1160191136347306,
+        "kurtosis": 79.97623753789497,
+        "var_95": 0.0,
+        "var_99": -0.010620162499334933,
+        "downside_deviation": 0.007747128583073179
+      },
+      "Momentum_AMZN": {
+        "volatility": 0.5231583545723181,
+        "skewness": -25.234301905358148,
+        "kurtosis": 727.6437403315492,
+        "var_95": -0.016067035830801414,
+        "var_99": -0.034321372661146494,
+        "downside_deviation": 0.06970424093207041
+      },
+      "DP_K2_META": {
+        "volatility": 0.0683670158525093,
+        "skewness": 9.792003917394675,
+        "kurtosis": 104.57880123567166,
+        "var_95": 0.0,
+        "var_99": -0.0009990009990008568,
+        "downside_deviation": 9.470757794196304e-05
+      },
+      "DP_K5_META": {
+        "volatility": 0.1041475353195086,
+        "skewness": 6.74278788930163,
+        "kurtosis": 54.84880114539402,
+        "var_95": -0.0005292853413704888,
+        "var_99": -0.0009990009990009366,
+        "downside_deviation": 0.00011185105389343501
+      },
+      "DP_K10_META": {
+        "volatility": 0.14355877290214206,
+        "skewness": 4.529097557990976,
+        "kurtosis": 24.306558689626158,
+        "var_95": -0.0009990009990008739,
+        "var_99": -0.0009990009990009576,
+        "downside_deviation": 8.580075950251875e-05
+      },
+      "BuyHold_META": {
+        "volatility": 0.4040066567420037,
+        "skewness": -1.0351206258528103,
+        "kurtosis": 31.323838116986803,
+        "var_95": -0.03731850694558385,
+        "var_99": -0.06435904571755659,
+        "downside_deviation": 0.02566776016397222
+      },
+      "MA_Crossover_META": {
+        "volatility": 0.04413173117955934,
+        "skewness": 4.4293640740791425,
+        "kurtosis": 94.30797785320394,
+        "var_95": 0.0,
+        "var_99": -0.0009990009990008461,
+        "downside_deviation": 0.008653901846687368
+      },
+      "Momentum_META": {
+        "volatility": 0.2916366194107703,
+        "skewness": 0.754987685375317,
+        "kurtosis": 78.16282084426075,
+        "var_95": -0.019749616037174598,
+        "var_99": -0.04584609847957402,
+        "downside_deviation": 0.021867836226539396
+      },
+      "DP_K2_NFLX": {
+        "volatility": 0.12212929800932024,
+        "skewness": 14.584192718426195,
+        "kurtosis": 266.18250275172585,
+        "var_95": 0.0,
+        "var_99": -0.0009990009990009068,
+        "downside_deviation": 0.0001661658552371712
+      },
+      "DP_K5_NFLX": {
+        "volatility": 0.13460867030501994,
+        "skewness": 11.193728622321178,
+        "kurtosis": 177.68241082450345,
+        "var_95": -0.0008670203874505518,
+        "var_99": -0.0009990009990009316,
+        "downside_deviation": 0.00012440659854097668
+      },
+      "DP_K10_NFLX": {
+        "volatility": 0.17832976136567263,
+        "skewness": 6.7638526394934315,
+        "kurtosis": 66.57667371321008,
+        "var_95": -0.0009990009990008555,
+        "var_99": -0.0009990009990009444,
+        "downside_deviation": 0.0001298590344465298
+      },
+      "BuyHold_NFLX": {
+        "volatility": 0.3952891771807526,
+        "skewness": -2.2552285552317928,
+        "kurtosis": 46.899964992062706,
+        "var_95": -0.03266516483728903,
+        "var_99": -0.06229073045516962,
+        "downside_deviation": 0.02255534487192935
+      },
+      "MA_Crossover_NFLX": {
+        "volatility": 0.007327617040522364,
+        "skewness": 0.5617618312490527,
+        "kurtosis": 466.97769103386696,
+        "var_95": 0.0,
+        "var_99": 0.0,
+        "downside_deviation": 0.004458325179974696
+      },
+      "Momentum_NFLX": {
+        "volatility": 0.22838960838150718,
+        "skewness": 1.4663599958413132,
+        "kurtosis": 19.22625616808723,
+        "var_95": -0.01967103381834542,
+        "var_99": -0.04277540591469895,
+        "downside_deviation": 0.01431571927614797
+      },
+      "DP_K2_NVDA": {
+        "volatility": 0.07003071241398601,
+        "skewness": 9.240947398153203,
+        "kurtosis": 94.36913948223582,
+        "var_95": 0.0,
+        "var_99": -0.0009990009990008784,
+        "downside_deviation": 4.19402418411572e-17
+      },
+      "DP_K5_NVDA": {
+        "volatility": 0.1536042429040245,
+        "skewness": 5.7162199421063145,
+        "kurtosis": 36.17183990093423,
+        "var_95": 0.0,
+        "var_99": -0.0009990009990009363,
+        "downside_deviation": 4.5554693507545543e-17
+      },
+      "DP_K10_NVDA": {
+        "volatility": 0.21425126527045477,
+        "skewness": 3.813602874091395,
+        "kurtosis": 15.618452635710389,
+        "var_95": -0.0009990009990008637,
+        "var_99": -0.0009990009990009474,
+        "downside_deviation": 0.0001520540850015575
+      },
+      "BuyHold_NVDA": {
+        "volatility": 0.6721642897200018,
+        "skewness": -9.850885111118828,
+        "kurtosis": 217.29709950928472,
+        "var_95": -0.04711218930679566,
+        "var_99": -0.07206788771870025,
+        "downside_deviation": 0.05210973680044754
+      },
+      "MA_Crossover_NVDA": {
+        "volatility": 0.036028089454288495,
+        "skewness": -7.803445224830653,
+        "kurtosis": 259.91201643917617,
+        "var_95": 0.0,
+        "var_99": 0.0,
+        "downside_deviation": 0.016209621010342436
+      },
+      "Momentum_NVDA": {
+        "volatility": 0.3231090638961751,
+        "skewness": 2.6243453945609834,
+        "kurtosis": 26.461490908012692,
+        "var_95": -0.028030932191897985,
+        "var_99": -0.05225851350633299,
+        "downside_deviation": 0.016097567470626194
+      },
+      "DP_K2_JPM": {
+        "volatility": 0.03002915773082317,
+        "skewness": 8.643713166551187,
+        "kurtosis": 81.88192692662776,
+        "var_95": 0.0,
+        "var_99": -0.0009990009990008559,
+        "downside_deviation": 3.188679926414677e-17
+      },
+      "DP_K5_JPM": {
+        "volatility": 0.06248751090622049,
+        "skewness": 5.777065049605684,
+        "kurtosis": 39.708419511673924,
+        "var_95": 0.0,
+        "var_99": -0.0009990009990009307,
+        "downside_deviation": 0.00010916995269412845
+      },
+      "DP_K10_JPM": {
+        "volatility": 0.08641028910833295,
+        "skewness": 3.7955290218138455,
+        "kurtosis": 16.844343097040035,
+        "var_95": -0.0009990009990008522,
+        "var_99": -0.0009990009990009396,
+        "downside_deviation": 8.012592462099108e-05
+      },
+      "BuyHold_JPM": {
+        "volatility": 0.20565909230973287,
+        "skewness": 0.038026093276152174,
+        "kurtosis": 2.97783143427255,
+        "var_95": -0.021495913737482247,
+        "var_99": -0.03485705761147085,
+        "downside_deviation": 0.01003906568404976
+      },
+      "MA_Crossover_JPM": {
+        "volatility": 0.0034495987366740316,
+        "skewness": -29.80024734740522,
+        "kurtosis": 902.5750942344106,
+        "var_95": 0.0,
+        "var_99": 0.0,
+        "downside_deviation": 0.002803529803529877
+      },
+      "Momentum_JPM": {
+        "volatility": 0.10100135466829058,
+        "skewness": 0.18799636675709397,
+        "kurtosis": 13.514392281266678,
+        "var_95": -0.009952003526073165,
+        "var_99": -0.019889323120589192,
+        "downside_deviation": 0.007611502326616026
+      },
+      "DP_K2_JNJ": {
+        "volatility": 0.027870279802441313,
+        "skewness": 9.662341449847224,
+        "kurtosis": 108.95507990585166,
+        "var_95": 0.0,
+        "var_99": -0.0009990009990008917,
+        "downside_deviation": 7.306754614494732e-05
+      },
+      "DP_K5_JNJ": {
+        "volatility": 0.0427602689481972,
+        "skewness": 5.687637225925101,
+        "kurtosis": 37.21457715177272,
+        "var_95": 0.0,
+        "var_99": -0.000999000999000927,
+        "downside_deviation": 0.0001576200543647785
+      },
+      "DP_K10_JNJ": {
+        "volatility": 0.05847842512249529,
+        "skewness": 3.8711225029708483,
+        "kurtosis": 16.199352132985176,
+        "var_95": -0.00099900099900086,
+        "var_99": -0.000999000999000938,
+        "downside_deviation": 0.00014694389713922905
+      },
+      "BuyHold_JNJ": {
+        "volatility": 0.15160066343170933,
+        "skewness": 0.3205617657380442,
+        "kurtosis": 3.9609732796200645,
+        "var_95": -0.015697292311516287,
+        "var_99": -0.025412773608858436,
+        "downside_deviation": 0.006689478270395265
+      },
+      "MA_Crossover_JNJ": {
+        "volatility": 0.01935280689416955,
+        "skewness": -11.730832648291754,
+        "kurtosis": 307.29577448501806,
+        "var_95": 0.0,
+        "var_99": 0.0,
+        "downside_deviation": 0.008791448285491534
+      },
+      "Momentum_JNJ": {
+        "volatility": 0.08492915912931011,
+        "skewness": -0.8929246126996725,
+        "kurtosis": 12.798284623459015,
+        "var_95": -0.008591054769809823,
+        "var_99": -0.017196557933390214,
+        "downside_deviation": 0.007150559734999303
+      }
+    },
+    "risk_rankings": {
+      "volatility": {
+        "MA_Crossover_JPM": 0.0034495987366740316,
+        "MA_Crossover_AAPL": 0.006523391000469567,
+        "MA_Crossover_NFLX": 0.007327617040522364,
+        "MA_Crossover_MSFT": 0.01902843607937259,
+        "MA_Crossover_JNJ": 0.01935280689416955,
+        "MA_Crossover_GOOGL": 0.022362782534041285,
+        "DP_K2_JNJ": 0.027870279802441313,
+        "DP_K2_JPM": 0.03002915773082317,
+        "MA_Crossover_NVDA": 0.036028089454288495,
+        "DP_K5_JNJ": 0.0427602689481972,
+        "MA_Crossover_AMZN": 0.04318713884390247,
+        "DP_K2_MSFT": 0.04370912289781496,
+        "MA_Crossover_META": 0.04413173117955934,
+        "MA_Crossover_TSLA": 0.046521668966913864,
+        "DP_K2_AAPL": 0.05678341647370757,
+        "DP_K10_JNJ": 0.05847842512249529,
+        "DP_K2_AMZN": 0.06016836256467821,
+        "DP_K5_JPM": 0.06248751090622049,
+        "DP_K2_GOOGL": 0.06601555853977269,
+        "DP_K2_META": 0.0683670158525093,
+        "DP_K2_NVDA": 0.07003071241398601,
+        "DP_K5_MSFT": 0.07264488424058627,
+        "Momentum_JNJ": 0.08492915912931011,
+        "DP_K10_JPM": 0.08641028910833295,
+        "DP_K5_AAPL": 0.08757787190497611,
+        "DP_K2_TSLA": 0.09178422449732881,
+        "DP_K5_GOOGL": 0.09779800259361936,
+        "Momentum_JPM": 0.10100135466829058,
+        "DP_K5_META": 0.1041475353195086,
+        "DP_K10_MSFT": 0.10425777458243561,
+        "DP_K10_AAPL": 0.10854129340112295,
+        "DP_K10_GOOGL": 0.11068291516969588,
+        "DP_K5_AMZN": 0.11717042056674132,
+        "DP_K2_NFLX": 0.12212929800932024,
+        "Momentum_AAPL": 0.1321579683495811,
+        "DP_K5_NFLX": 0.13460867030501994,
+        "Momentum_MSFT": 0.1354485872467131,
+        "DP_K10_META": 0.14355877290214206,
+        "DP_K10_AMZN": 0.14411097846253085,
+        "BuyHold_JNJ": 0.15160066343170933,
+        "DP_K5_NVDA": 0.1536042429040245,
+        "Momentum_GOOGL": 0.16306578798671828,
+        "DP_K10_NFLX": 0.17832976136567263,
+        "DP_K5_TSLA": 0.203267564317886,
+        "BuyHold_JPM": 0.20565909230973287,
+        "BuyHold_AAPL": 0.20599996503279858,
+        "DP_K10_NVDA": 0.21425126527045477,
+        "Momentum_NFLX": 0.22838960838150718,
+        "BuyHold_MSFT": 0.2569139277068236,
+        "DP_K10_TSLA": 0.26557086383660633,
+        "Momentum_META": 0.2916366194107703,
+        "Momentum_NVDA": 0.3231090638961751,
+        "BuyHold_NFLX": 0.3952891771807526,
+        "BuyHold_META": 0.4040066567420037,
+        "Momentum_TSLA": 0.46247161029197514,
+        "BuyHold_TSLA": 0.49938437070505387,
+        "Momentum_AMZN": 0.5231583545723181,
+        "BuyHold_GOOGL": 0.5622505299157761,
+        "BuyHold_AMZN": 0.5870858440326888,
+        "BuyHold_NVDA": 0.6721642897200018
+      }
+    },
+    "correlation_analysis": {}
+  }
+}

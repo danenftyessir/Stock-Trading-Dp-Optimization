@@ -1,8 +1,5 @@
 """
 Baseline Trading Strategies for comparison with Dynamic Programming approach.
-FIXED: Resolved ImportError by using absolute imports and fallback import handling.
-Added get_name, fit, and predict_signals methods to all baseline strategies.
-Ensured _calculate_basic_metrics and _empty_result return consistent metric keys.
 """
 
 import numpy as np
@@ -12,16 +9,12 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# FIXED: Import handling to avoid relative import issues
 try:
-    # Try absolute import first
     from analysis.performance_metrics import PerformanceAnalyzer
 except ImportError:
     try:
-        # Try relative import as fallback
         from ..analysis.performance_metrics import PerformanceAnalyzer
     except ImportError:
-        # If both fail, use None and implement fallback metrics
         PerformanceAnalyzer = None
         logger.warning("PerformanceAnalyzer not available, using fallback metrics calculation")
 
@@ -29,8 +22,6 @@ except ImportError:
 class BuyAndHoldStrategy:
     """
     Simple Buy and Hold strategy for baseline comparison.
-    FIXED: Enhanced implementation with proper transaction cost handling.
-    Added get_name, fit, and predict_signals methods.
     """
 
     def __init__(self, transaction_cost: float = 0.001):
@@ -80,7 +71,6 @@ class BuyAndHoldStrategy:
     def execute(self, prices: List[float], initial_capital: float = 100000) -> Dict:
         """
         Execute Buy and Hold strategy.
-        FIXED: More realistic execution with proper validation.
 
         Args:
             prices (List[float]): Historical stock prices
@@ -246,8 +236,6 @@ class BuyAndHoldStrategy:
 class MovingAverageCrossoverStrategy:
     """
     Moving Average Crossover strategy.
-    FIXED: Enhanced implementation with better signal generation and validation.
-    Added get_name, fit, and predict_signals methods.
     """
 
     def __init__(self, short_window: int = 20, long_window: int = 50,
@@ -327,7 +315,6 @@ class MovingAverageCrossoverStrategy:
     def execute(self, prices: List[float], initial_capital: float = 100000) -> Dict:
         """
         Execute Moving Average Crossover strategy.
-        FIXED: More realistic execution with proper position tracking.
 
         Args:
             prices (List[float]): Historical stock prices
@@ -513,8 +500,6 @@ class MovingAverageCrossoverStrategy:
 class MomentumStrategy:
     """
     Simple momentum strategy based on recent price movements.
-    FIXED: Enhanced momentum calculation with better signal filtering.
-    Added get_name, fit, and predict_signals methods.
     """
 
     def __init__(self, lookback_window: int = 10, threshold: float = 0.02,

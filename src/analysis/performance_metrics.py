@@ -1,6 +1,5 @@
 """
 Performance Metrics and Risk Analysis Module.
-FIXED VERSION - Corrected win rate calculation and removed artificial metric capping.
 """
 
 import pandas as pd
@@ -16,7 +15,6 @@ logger = logging.getLogger(__name__)
 class PerformanceAnalyzer:
     """
     Comprehensive performance analysis for trading strategies.
-    FIXED: Accurate metric calculations without artificial constraints.
     """
     
     def __init__(self, risk_free_rate: float = 0.02, trading_days: int = 252):
@@ -33,7 +31,6 @@ class PerformanceAnalyzer:
     def calculate_returns(self, portfolio_values: List[float]) -> np.ndarray:
         """
         Calculate daily returns from portfolio values.
-        FIXED: Proper handling of edge cases without artificial constraints.
         
         Args:
             portfolio_values (List[float]): Portfolio values over time
@@ -65,7 +62,6 @@ class PerformanceAnalyzer:
     def annualized_return(self, portfolio_values: List[float]) -> float:
         """
         Calculate annualized return.
-        FIXED: Accurate calculation without artificial capping.
         
         Args:
             portfolio_values (List[float]): Portfolio values over time
@@ -98,7 +94,6 @@ class PerformanceAnalyzer:
     def volatility(self, portfolio_values: List[float]) -> float:
         """
         Calculate annualized volatility.
-        FIXED: Accurate volatility calculation without artificial limits.
         
         Args:
             portfolio_values (List[float]): Portfolio values over time
@@ -117,7 +112,6 @@ class PerformanceAnalyzer:
     def sharpe_ratio(self, portfolio_values: List[float]) -> float:
         """
         Calculate Sharpe ratio.
-        FIXED: Proper Sharpe ratio calculation without artificial capping.
         
         Args:
             portfolio_values (List[float]): Portfolio values over time
@@ -149,7 +143,6 @@ class PerformanceAnalyzer:
     def sortino_ratio(self, portfolio_values: List[float]) -> float:
         """
         Calculate Sortino ratio (like Sharpe but using downside deviation).
-        FIXED: Accurate calculation without artificial limits.
         
         Args:
             portfolio_values (List[float]): Portfolio values over time
@@ -228,7 +221,6 @@ class PerformanceAnalyzer:
     def calmar_ratio(self, portfolio_values: List[float]) -> float:
         """
         Calculate Calmar ratio (annualized return / max drawdown).
-        FIXED: Accurate calculation without artificial limits.
         
         Args:
             portfolio_values (List[float]): Portfolio values over time
@@ -293,7 +285,6 @@ class PerformanceAnalyzer:
                          benchmark_values: List[float]) -> float:
         """
         Calculate Information Ratio.
-        FIXED: Accurate calculation without artificial limits.
         
         Args:
             portfolio_values (List[float]): Portfolio values
@@ -382,7 +373,6 @@ class PerformanceAnalyzer:
     def win_rate(self, trades: List[Dict]) -> float:
         """
         Calculate win rate from trades.
-        FIXED: Accurate win rate calculation based on individual trade profits.
         
         Args:
             trades (List[Dict]): List of trade dictionaries with 'profit' key
@@ -428,7 +418,6 @@ class PerformanceAnalyzer:
                              dates: Optional[List[str]] = None) -> Dict:
         """
         Perform comprehensive performance analysis.
-        FIXED: Accurate analysis with proper validation and no artificial constraints.
         
         Args:
             portfolio_values (List[float]): Portfolio values over time
