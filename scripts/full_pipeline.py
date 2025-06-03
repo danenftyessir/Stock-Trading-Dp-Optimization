@@ -490,15 +490,17 @@ class StockTradingOptimizationPipeline:
                     'optimal_k_from_train': best_k_on_train,
                     'train_set_metrics': {'profit': best_profit_on_train, 'num_days': len(train_prices)},
                     'validation_set_metrics': {
-                        'profit': val_profit, 'num_trades': len(val_trades_list),
-                        'total_return': val_backtest['metrics']['total_return'],
-                        'sharpe_ratio': val_backtest['metrics']['sharpe_ratio'],
+                        'profit': val_profit, 
+                        'num_trades': len(val_trades_list),
+                        'total_return': val_backtest['metrics'].get('total_return', 0.0),
+                        'sharpe_ratio': val_backtest['metrics'].get('sharpe_ratio', 0.0),
                         'num_days': len(val_prices)
                     },
                     'test_set_metrics': {
-                        'profit': test_profit, 'num_trades': len(test_trades_list),
-                        'total_return': test_backtest['metrics']['total_return'],
-                        'sharpe_ratio': test_backtest['metrics']['sharpe_ratio'],
+                        'profit': test_profit, 
+                        'num_trades': len(test_trades_list),
+                        'total_return': test_backtest['metrics'].get('total_return', 0.0),
+                        'sharpe_ratio': test_backtest['metrics'].get('sharpe_ratio', 0.0),
                         'num_days': len(test_prices)
                     }
                 }
@@ -511,6 +513,7 @@ class StockTradingOptimizationPipeline:
         self._save_results_to_json(oos_results, output_file)
         self.logger.info("Out-of-sample testing completed")
         return oos_results
+
 
     def generate_comprehensive_report(self):
         """Step 7: Generate comprehensive analysis report."""
@@ -547,8 +550,8 @@ class StockTradingOptimizationPipeline:
             else:
                 best_k = 'N/A'
                 best_dp = {
-                    'max_profit': np.nan, 
-                    'backtest': {'metrics': {'total_return': np.nan, 'sharpe_ratio': np.nan, 'max_drawdown': np.nan}}, 
+                    'max_profit': 0.0, 
+                    'backtest': {'metrics': {'total_return': 0.0, 'sharpe_ratio': 0.0, 'max_drawdown': 0.0}}, 
                     'trades': []
                 }
 
@@ -556,7 +559,7 @@ class StockTradingOptimizationPipeline:
             
             # Handle potential errors in baseline results
             if 'error' in baseline_results_sym:
-                buy_hold_results = {'metrics': {'total_return': np.nan, 'sharpe_ratio': np.nan}}
+                buy_hold_results = {'metrics': {'total_return': 0.0, 'sharpe_ratio': 0.0}}
             else:
                 buy_hold_results = baseline_results_sym['individual_results'].get('Buy & Hold Strategy', {})
 
@@ -564,14 +567,14 @@ class StockTradingOptimizationPipeline:
                 'Symbol': symbol,
                 'DP_Optimal_K_for_Max_Profit': best_k,
                 'DP_Max_Profit': best_dp['max_profit'],
-                'DP_Total_Return': best_dp['backtest']['metrics']['total_return'],
-                'DP_Sharpe_Ratio': best_dp['backtest']['metrics']['sharpe_ratio'],
-                'DP_Max_Drawdown': best_dp['backtest']['metrics']['max_drawdown'],
+                'DP_Total_Return': best_dp['backtest']['metrics'].get('total_return', 0.0),
+                'DP_Sharpe_Ratio': best_dp['backtest']['metrics'].get('sharpe_ratio', 0.0),
+                'DP_Max_Drawdown': best_dp['backtest']['metrics'].get('max_drawdown', 0.0),
                 'DP_Num_Trades': len(best_dp['trades']),
-                'BuyHold_Total_Return': buy_hold_results.get('metrics', {}).get('total_return', np.nan),
-                'BuyHold_Sharpe_Ratio': buy_hold_results.get('metrics', {}).get('sharpe_ratio', np.nan),
-                'DP_vs_BuyHold_Excess_Return': (best_dp['backtest']['metrics']['total_return'] -
-                                               buy_hold_results.get('metrics', {}).get('total_return', np.nan))
+                'BuyHold_Total_Return': buy_hold_results.get('metrics', {}).get('total_return', 0.0),
+                'BuyHold_Sharpe_Ratio': buy_hold_results.get('metrics', {}).get('sharpe_ratio', 0.0),
+                'DP_vs_BuyHold_Excess_Return': (best_dp['backtest']['metrics'].get('total_return', 0.0) -
+                                            buy_hold_results.get('metrics', {}).get('total_return', 0.0))
             })
             
         summary_df = pd.DataFrame(summary_data)

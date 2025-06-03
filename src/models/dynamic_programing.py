@@ -1,6 +1,5 @@
 """
 Dynamic Programming Implementation for Stock Trading Optimization.
-FIXED: Corrected DP algorithm implementation and trade reconstruction.
 """
 
 import numpy as np
@@ -383,10 +382,21 @@ class DynamicProgrammingTrader:
         return portfolio_values
     
     def _basic_metrics(self, portfolio_values: List[float], trades: List[Dict], 
-                      initial_capital: float) -> Dict:
+                    initial_capital: float) -> Dict:
         """Calculate basic performance metrics as fallback."""
         if not portfolio_values:
-            return {'total_return': 0.0, 'num_trades': 0, 'win_rate': 0.0}
+            return {
+                'total_return': 0.0,
+                'num_trades': 0,
+                'win_rate': 0.0,
+                'sharpe_ratio': 0.0,
+                'max_drawdown': 0.0,
+                'volatility': 0.0,
+                'annualized_return': 0.0,
+                'final_value': initial_capital,
+                'initial_value': initial_capital,
+                'number_of_trades': 0
+            }
         
         total_return = (portfolio_values[-1] - initial_capital) / initial_capital
         num_trades = len(trades)
@@ -398,13 +408,62 @@ class DynamicProgrammingTrader:
         else:
             win_rate = 0.0
         
+        # Calculate returns for risk metrics
+        returns = np.diff(portfolio_values) / np.array(portfolio_values[:-1])
+        returns = returns[np.isfinite(returns)]
+        
+        # Calculate volatility
+        volatility = np.std(returns) * np.sqrt(252) if len(returns) > 0 else 0.0
+        
+        # Calculate Sharpe ratio
+        if len(returns) > 0 and np.std(returns) > 0:
+            risk_free_rate = 0.02  # 2% annual risk-free rate
+            excess_returns = returns - (risk_free_rate / 252)
+            sharpe_ratio = np.mean(excess_returns) / np.std(returns) * np.sqrt(252)
+            # Ensure finite value
+            sharpe_ratio = sharpe_ratio if np.isfinite(sharpe_ratio) else 0.0
+        else:
+            sharpe_ratio = 0.0
+        
+        # Calculate maximum drawdown
+        portfolio_array = np.array(portfolio_values)
+        peak = np.maximum.accumulate(portfolio_array)
+        drawdown = (peak - portfolio_array) / peak
+        max_drawdown = np.max(drawdown)
+        
+        # Calculate annualized return
+        if len(portfolio_values) > 1:
+            years = len(portfolio_values) / 252
+            try:
+                annualized_return = ((portfolio_values[-1] / portfolio_values[0]) ** (1 / years)) - 1
+                annualized_return = annualized_return if np.isfinite(annualized_return) else 0.0
+            except:
+                annualized_return = 0.0
+        else:
+            annualized_return = 0.0
+        
         return {
             'total_return': total_return,
             'num_trades': num_trades,
             'win_rate': win_rate,
             'final_value': portfolio_values[-1],
-            'initial_value': initial_capital
+            'initial_value': initial_capital,
+            'sharpe_ratio': sharpe_ratio,
+            'max_drawdown': max_drawdown,
+            'volatility': volatility,
+            'annualized_return': annualized_return,
+            'number_of_trades': num_trades
         }
+    
+    def _calculate_max_drawdown(self, portfolio_values: List[float]) -> float:
+        """Calculate maximum drawdown."""
+        if not portfolio_values:
+            return 0.0
+        
+        portfolio_array = np.array(portfolio_values)
+        peak = np.maximum.accumulate(portfolio_array)
+        drawdown = (peak - portfolio_array) / peak
+        return np.max(drawdown)
 
 
 class DPPortfolioOptimizer:
