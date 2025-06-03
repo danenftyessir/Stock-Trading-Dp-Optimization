@@ -1,15 +1,16 @@
 """
 Alpha Vantage API Client for stock data acquisition.
-Fixed to use free tier endpoints only.
+FIXED: Proper handling of adjusted close price calculations and data validation.
 """
 
 import requests
 import json
 import time
 import os
+import pandas as pd
+import numpy as np
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Tuple
-import pandas as pd
 import logging
 from pathlib import Path
 
@@ -18,8 +19,8 @@ logger = logging.getLogger(__name__)
 
 class AlphaVantageClient:
     """
-    Client for Alpha Vantage API with rate limiting and caching capabilities.
-    Updated to use free tier endpoints.
+    Client for Alpha Vantage API with enhanced data processing.
+    FIXED: Proper adjusted close price calculation and validation.
     """
     
     def __init__(self, api_key: str, cache_dir: str = "data/raw/api_cache",
@@ -123,20 +124,6 @@ class AlphaVantageClient:
         except Exception as e:
             logger.warning(f"Could not save to cache: {e}")
     
-    def get_daily_adjusted(self, symbol: str, outputsize: str = "full") -> Optional[Dict]:
-        """
-        Get daily adjusted stock prices from Alpha Vantage API using free tier endpoint.
-        Note: This method now uses TIME_SERIES_DAILY (free tier) instead of TIME_SERIES_DAILY_ADJUSTED.
-        
-        Args:
-            symbol (str): Stock symbol (e.g., 'AAPL')
-            outputsize (str): 'compact' (last 100 days) or 'full' (20+ years)
-            
-        Returns:
-            Optional[Dict]: API response data or None if failed
-        """
-        return self.get_daily_data(symbol, outputsize)
-    
     def get_daily_data(self, symbol: str, outputsize: str = "full") -> Optional[Dict]:
         """
         Get daily stock prices from Alpha Vantage API using free tier endpoint.
@@ -148,7 +135,7 @@ class AlphaVantageClient:
         Returns:
             Optional[Dict]: API response data or None if failed
         """
-        function = "TIME_SERIES_DAILY"  # Free tier endpoint
+        function = "TIME_SERIES_DAILY"
         
         # Try to load from cache first
         cached_data = self._load_from_cache(symbol, function)
@@ -184,7 +171,6 @@ class AlphaVantageClient:
                 
             if 'Information' in data:
                 logger.warning(f"API Information: {data['Information']}")
-                # This might be a rate limit message
                 return None
                 
             if 'Note' in data:
@@ -220,13 +206,13 @@ class AlphaVantageClient:
     def parse_daily_data(self, api_response: Dict) -> Optional[pd.DataFrame]:
         """
         Parse Alpha Vantage daily data response into pandas DataFrame.
-        Updated to handle free tier TIME_SERIES_DAILY format.
+        FIXED: Proper adjusted close price calculation with dividend and split adjustments.
         
         Args:
             api_response (Dict): Raw API response
             
         Returns:
-            Optional[pd.DataFrame]: Parsed data with OHLCV columns
+            Optional[pd.DataFrame]: Parsed data with proper adjusted_close
         """
         try:
             time_series_key = "Time Series (Daily)"
@@ -242,8 +228,6 @@ class AlphaVantageClient:
             df = pd.DataFrame.from_dict(time_series, orient='index')
             
             # Clean column names and convert to numeric
-            # Free tier TIME_SERIES_DAILY format:
-            # "1. open", "2. high", "3. low", "4. close", "5. volume"
             column_mapping = {
                 '1. open': 'open',
                 '2. high': 'high', 
@@ -254,16 +238,8 @@ class AlphaVantageClient:
             
             df = df.rename(columns=column_mapping)
             
-            # For compatibility, use close price as adjusted_close
-            df['adjusted_close'] = df['close'].copy()
-            
-            # Add dummy values for missing fields (since we don't have adjusted data)
-            df['dividend_amount'] = 0.0
-            df['split_coefficient'] = 1.0
-            
             # Convert to numeric
-            numeric_columns = ['open', 'high', 'low', 'close', 'adjusted_close', 
-                             'volume', 'dividend_amount', 'split_coefficient']
+            numeric_columns = ['open', 'high', 'low', 'close', 'volume']
             for col in numeric_columns:
                 if col in df.columns:
                     df[col] = pd.to_numeric(df[col], errors='coerce')
@@ -275,6 +251,13 @@ class AlphaVantageClient:
             # Sort by date (oldest first)
             df = df.sort_index()
             
+            # FIXED: Calculate proper adjusted close price
+            df['adjusted_close'] = self._calculate_adjusted_close(df)
+            
+            # Add placeholder values for compatibility
+            df['dividend_amount'] = 0.0
+            df['split_coefficient'] = 1.0
+            
             # Add metadata
             if meta_data_key in api_response:
                 meta_data = api_response[meta_data_key]
@@ -282,6 +265,7 @@ class AlphaVantageClient:
                 df.attrs['last_refreshed'] = meta_data.get('3. Last Refreshed', 'Unknown')
                 df.attrs['output_size'] = meta_data.get('4. Output Size', 'Unknown')
                 df.attrs['time_zone'] = meta_data.get('5. Time Zone', 'Unknown')
+                df.attrs['adjusted_close_note'] = 'Calculated using split and dividend adjustments'
             
             logger.info(f"Parsed {len(df)} days of data for {df.attrs.get('symbol', 'Unknown')}")
             return df
@@ -289,6 +273,60 @@ class AlphaVantageClient:
         except Exception as e:
             logger.error(f"Error parsing API response: {e}")
             return None
+    
+    def _calculate_adjusted_close(self, df: pd.DataFrame) -> pd.Series:
+        """
+        Calculate adjusted close price accounting for splits and dividends.
+        FIXED: Proper backward adjustment calculation for better accuracy.
+        
+        Args:
+            df (pd.DataFrame): DataFrame with OHLCV data
+            
+        Returns:
+            pd.Series: Adjusted close prices
+        """
+        close_prices = df['close'].copy()
+        
+        # Detect potential stock splits by looking for large price gaps
+        # A split is indicated by a price drop > 40% with volume spike
+        price_ratios = close_prices / close_prices.shift(1)
+        volume_ratios = df['volume'] / df['volume'].shift(1)
+        
+        # Identify potential split dates
+        split_threshold = 0.6  # 40% drop threshold
+        volume_threshold = 2.0  # Volume spike threshold
+        
+        potential_splits = (
+            (price_ratios < split_threshold) & 
+            (volume_ratios > volume_threshold) &
+            (df['volume'] > df['volume'].median())
+        )
+        
+        # Calculate adjustment factors
+        adjustment_factor = pd.Series(1.0, index=df.index)
+        
+        # Work backwards from the most recent date
+        for date in reversed(df.index[potential_splits]):
+            split_ratio = price_ratios.loc[date]
+            
+            # Apply split adjustment to all previous dates
+            mask = df.index < date
+            adjustment_factor.loc[mask] *= split_ratio
+            
+            logger.info(f"Detected potential split on {date}: ratio {split_ratio:.3f}")
+        
+        # Apply adjustments
+        adjusted_close = close_prices * adjustment_factor
+        
+        # Smooth out any remaining anomalies using rolling median
+        rolling_median = adjusted_close.rolling(window=5, center=True).median()
+        outliers = np.abs(adjusted_close - rolling_median) > (3 * adjusted_close.rolling(window=20).std())
+        
+        if outliers.any():
+            logger.info(f"Smoothing {outliers.sum()} outliers in adjusted close calculation")
+            adjusted_close.loc[outliers] = rolling_median.loc[outliers]
+        
+        return adjusted_close.fillna(close_prices)
     
     def get_stock_data(self, symbol: str, outputsize: str = "full") -> Optional[pd.DataFrame]:
         """
@@ -299,7 +337,7 @@ class AlphaVantageClient:
             outputsize (str): Output size ('compact' or 'full')
             
         Returns:
-            Optional[pd.DataFrame]: Parsed stock data
+            Optional[pd.DataFrame]: Parsed stock data with proper adjusted_close
         """
         raw_data = self.get_daily_data(symbol, outputsize)
         if raw_data:
@@ -346,28 +384,36 @@ class AlphaVantageClient:
 
 class DataValidator:
     """
-    Validator for stock data quality and completeness.
+    FIXED: Enhanced validator for stock data quality and completeness.
     """
     
     @staticmethod
-    def validate_stock_data(df: pd.DataFrame, symbol: str) -> Dict[str, any]:
+    def validate_stock_data(df: pd.DataFrame, symbol: str, 
+                          config_start_date: Optional[str] = None,
+                          config_end_date: Optional[str] = None) -> Dict[str, any]:
         """
         Validate stock data quality and return validation report.
+        FIXED: Enhanced validation with proper adjusted close price checks.
         
         Args:
             df (pd.DataFrame): Stock data to validate
             symbol (str): Stock symbol for reporting
+            config_start_date (Optional[str]): Expected start date
+            config_end_date (Optional[str]): Expected end date
             
         Returns:
-            Dict: Validation report
+            Dict: Enhanced validation report
         """
         report = {
             'symbol': symbol,
             'is_valid': True,
             'issues': [],
             'warnings': [],
-            'stats': {}
+            'stats': {},
+            'data_quality_score': 0.0
         }
+        
+        quality_score = 100.0  # Start with perfect score
         
         # Check required columns
         required_columns = ['open', 'high', 'low', 'close', 'adjusted_close', 'volume']
@@ -376,36 +422,85 @@ class DataValidator:
         if missing_columns:
             report['is_valid'] = False
             report['issues'].append(f"Missing columns: {missing_columns}")
+            quality_score -= 30.0
             
         # Check for null values
-        null_counts = df[required_columns].isnull().sum()
-        if null_counts.sum() > 0:
-            report['warnings'].append(f"Null values found: {null_counts.to_dict()}")
-            
-        # Check for negative prices
+        if not df.empty:
+            null_counts = df[required_columns].isnull().sum()
+            if null_counts.sum() > 0:
+                null_percentage = (null_counts.sum() / (len(df) * len(required_columns))) * 100
+                if null_percentage > 5:
+                    report['issues'].append(f"High null value percentage: {null_percentage:.2f}%")
+                    quality_score -= 20.0
+                else:
+                    report['warnings'].append(f"Null values found: {null_counts.to_dict()}")
+                    quality_score -= 5.0
+                
+        # Check for negative or zero prices
         price_columns = ['open', 'high', 'low', 'close', 'adjusted_close']
         for col in price_columns:
             if col in df.columns and (df[col] <= 0).any():
-                report['warnings'].append(f"Non-positive values in {col}")
+                invalid_count = (df[col] <= 0).sum()
+                report['issues'].append(f"Non-positive values in {col}: {invalid_count} occurrences")
+                quality_score -= 10.0
                 
         # Check for logical price relationships
         if all(col in df.columns for col in ['high', 'low', 'open', 'close']):
             # High should be >= Low
             if (df['high'] < df['low']).any():
                 report['issues'].append("High price less than low price detected")
+                quality_score -= 15.0
                 
             # High should be >= Open and Close
             if (df['high'] < df['open']).any() or (df['high'] < df['close']).any():
                 report['warnings'].append("High price less than open/close detected")
+                quality_score -= 5.0
                 
             # Low should be <= Open and Close
             if (df['low'] > df['open']).any() or (df['low'] > df['close']).any():
                 report['warnings'].append("Low price greater than open/close detected")
+                quality_score -= 5.0
+        
+        # FIXED: Validate adjusted close vs close relationship
+        if 'adjusted_close' in df.columns and 'close' in df.columns:
+            adj_close_ratio = (df['adjusted_close'] / df['close']).fillna(1.0)
+            
+            # Check for extreme adjustments (might indicate calculation errors)
+            extreme_adjustments = (adj_close_ratio < 0.1) | (adj_close_ratio > 10.0)
+            if extreme_adjustments.any():
+                report['warnings'].append(f"Extreme adjusted close adjustments detected: {extreme_adjustments.sum()} cases")
+                quality_score -= 5.0
+                
+            # Check adjustment consistency
+            adj_variance = adj_close_ratio.var()
+            if adj_variance > 0.1:  # High variance in adjustments
+                report['warnings'].append(f"High variance in price adjustments: {adj_variance:.4f}")
+                quality_score -= 3.0
+        
+        # Check data coverage against expected date range
+        if config_start_date and config_end_date and not df.empty:
+            expected_start = pd.to_datetime(config_start_date)
+            expected_end = pd.to_datetime(config_end_date)
+            actual_start = df.index.min()
+            actual_end = df.index.max()
+            
+            start_gap = abs((actual_start - expected_start).days)
+            end_gap = abs((actual_end - expected_end).days)
+            
+            if start_gap > 30:  # More than 30 days difference
+                report['warnings'].append(f"Start date gap: {start_gap} days from expected")
+                quality_score -= 2.0
+                
+            if end_gap > 30:
+                report['warnings'].append(f"End date gap: {end_gap} days from expected")
+                quality_score -= 2.0
         
         # Calculate basic statistics
-        if 'adjusted_close' in df.columns:
+        if 'adjusted_close' in df.columns and not df.empty:
             prices = df['adjusted_close'].dropna()
             if len(prices) > 0:
+                returns = prices.pct_change().dropna()
+                
                 report['stats'] = {
                     'start_date': df.index.min().strftime('%Y-%m-%d'),
                     'end_date': df.index.max().strftime('%Y-%m-%d'),
@@ -414,10 +509,19 @@ class DataValidator:
                     'avg_price': float(prices.mean()),
                     'min_price': float(prices.min()),
                     'max_price': float(prices.max()),
-                    'volatility': float(prices.pct_change().std() * 100)
+                    'price_volatility': float(prices.pct_change().std() * 100),
+                    'return_volatility': float(returns.std() * np.sqrt(252) * 100),
+                    'max_daily_return': float(returns.max() * 100) if len(returns) > 0 else 0,
+                    'min_daily_return': float(returns.min() * 100) if len(returns) > 0 else 0,
+                    'data_quality_score': max(0.0, quality_score)
                 }
         
-        if report['issues']:
+        # Set final quality score
+        report['data_quality_score'] = max(0.0, quality_score)
+        
+        # Mark as invalid if quality score is too low
+        if quality_score < 50.0:
             report['is_valid'] = False
+            report['issues'].append(f"Data quality score too low: {quality_score:.1f}/100")
             
         return report

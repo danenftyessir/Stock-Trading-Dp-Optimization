@@ -1,6 +1,6 @@
 """
 Performance Metrics and Risk Analysis Module.
-FIXED VERSION - Corrected Sharpe ratio and other metric calculations.
+FIXED VERSION - Corrected win rate calculation and removed artificial metric capping.
 """
 
 import pandas as pd
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 class PerformanceAnalyzer:
     """
     Comprehensive performance analysis for trading strategies.
-    FIXED: Corrected metric calculations for realistic values.
+    FIXED: Accurate metric calculations without artificial constraints.
     """
     
     def __init__(self, risk_free_rate: float = 0.02, trading_days: int = 252):
@@ -33,7 +33,7 @@ class PerformanceAnalyzer:
     def calculate_returns(self, portfolio_values: List[float]) -> np.ndarray:
         """
         Calculate daily returns from portfolio values.
-        FIXED: Handle edge cases and invalid values.
+        FIXED: Proper handling of edge cases without artificial constraints.
         
         Args:
             portfolio_values (List[float]): Portfolio values over time
@@ -46,16 +46,13 @@ class PerformanceAnalyzer:
             
         portfolio_array = np.array(portfolio_values)
         
-        # Remove any non-positive values
-        portfolio_array = np.maximum(portfolio_array, 1e-6)
+        # Handle any non-positive values
+        portfolio_array = np.maximum(portfolio_array, 1e-8)
         
         returns = np.diff(portfolio_array) / portfolio_array[:-1]
         
         # Remove any infinite or NaN values
         returns = returns[np.isfinite(returns)]
-        
-        # Cap extreme returns to reasonable range
-        returns = np.clip(returns, -0.5, 0.5)  # Cap at ±50% daily return
         
         return returns
     
@@ -68,7 +65,7 @@ class PerformanceAnalyzer:
     def annualized_return(self, portfolio_values: List[float]) -> float:
         """
         Calculate annualized return.
-        FIXED: More robust calculation with edge case handling.
+        FIXED: Accurate calculation without artificial capping.
         
         Args:
             portfolio_values (List[float]): Portfolio values over time
@@ -94,16 +91,14 @@ class PerformanceAnalyzer:
             
         try:
             annualized = ((final_value / initial_value) ** (1 / years)) - 1
-            # Cap annualized return to reasonable range
-            annualized = max(-0.99, min(10.0, annualized))  # Cap between -99% and 1000%
-            return annualized
+            return annualized if np.isfinite(annualized) else 0.0
         except (OverflowError, ZeroDivisionError):
             return 0.0
     
     def volatility(self, portfolio_values: List[float]) -> float:
         """
         Calculate annualized volatility.
-        FIXED: More robust volatility calculation.
+        FIXED: Accurate volatility calculation without artificial limits.
         
         Args:
             portfolio_values (List[float]): Portfolio values over time
@@ -117,15 +112,12 @@ class PerformanceAnalyzer:
         
         volatility = np.std(returns) * np.sqrt(self.trading_days)
         
-        # Cap volatility to reasonable range
-        volatility = min(volatility, 5.0)  # Cap at 500% annualized volatility
-        
-        return volatility
+        return volatility if np.isfinite(volatility) else 0.0
     
     def sharpe_ratio(self, portfolio_values: List[float]) -> float:
         """
         Calculate Sharpe ratio.
-        FIXED: Proper Sharpe ratio calculation with realistic bounds.
+        FIXED: Proper Sharpe ratio calculation without artificial capping.
         
         Args:
             portfolio_values (List[float]): Portfolio values over time
@@ -152,19 +144,12 @@ class PerformanceAnalyzer:
         # Calculate Sharpe ratio
         sharpe = mean_excess_return / std_returns * np.sqrt(self.trading_days)
         
-        # FIXED: Cap Sharpe ratio to realistic range
-        if np.isnan(sharpe) or np.isinf(sharpe):
-            return 0.0
-        
-        # Cap Sharpe ratio between -5 and 5 (extremely high values are unrealistic)
-        sharpe = max(-5.0, min(5.0, sharpe))
-        
-        return sharpe
+        return sharpe if np.isfinite(sharpe) else 0.0
     
     def sortino_ratio(self, portfolio_values: List[float]) -> float:
         """
         Calculate Sortino ratio (like Sharpe but using downside deviation).
-        FIXED: More robust calculation.
+        FIXED: Accurate calculation without artificial limits.
         
         Args:
             portfolio_values (List[float]): Portfolio values over time
@@ -183,21 +168,17 @@ class PerformanceAnalyzer:
         downside_returns = returns[returns < daily_rf_rate]
         
         if len(downside_returns) == 0:
-            # No downside risk
-            return 5.0 if mean_excess_return > 0 else 0.0
+            # No downside risk - return high but finite value
+            return 10.0 if mean_excess_return > 0 else 0.0
         
         downside_deviation = np.std(downside_returns) * np.sqrt(self.trading_days)
         
         if downside_deviation == 0:
-            return 5.0 if mean_excess_return > 0 else 0.0
+            return 10.0 if mean_excess_return > 0 else 0.0
         
         sortino = (mean_excess_return * self.trading_days) / downside_deviation
         
-        # Cap Sortino ratio to realistic range
-        if np.isnan(sortino) or np.isinf(sortino):
-            return 0.0
-        
-        return max(-5.0, min(5.0, sortino))
+        return sortino if np.isfinite(sortino) else 0.0
     
     def max_drawdown(self, portfolio_values: List[float]) -> Dict[str, float]:
         """
@@ -213,7 +194,7 @@ class PerformanceAnalyzer:
             return {'max_drawdown': 0.0, 'drawdown_duration': 0, 'recovery_time': 0}
             
         portfolio_array = np.array(portfolio_values)
-        portfolio_array = np.maximum(portfolio_array, 1e-6)  # Avoid division by zero
+        portfolio_array = np.maximum(portfolio_array, 1e-8)  # Avoid division by zero
         
         peak = np.maximum.accumulate(portfolio_array)
         drawdown = (peak - portfolio_array) / peak
@@ -247,7 +228,7 @@ class PerformanceAnalyzer:
     def calmar_ratio(self, portfolio_values: List[float]) -> float:
         """
         Calculate Calmar ratio (annualized return / max drawdown).
-        FIXED: More robust calculation.
+        FIXED: Accurate calculation without artificial limits.
         
         Args:
             portfolio_values (List[float]): Portfolio values over time
@@ -259,15 +240,11 @@ class PerformanceAnalyzer:
         max_dd = self.max_drawdown(portfolio_values)['max_drawdown']
         
         if max_dd == 0:
-            return 5.0 if annual_return > 0 else 0.0
+            return 10.0 if annual_return > 0 else 0.0
         
         calmar = annual_return / max_dd
         
-        # Cap Calmar ratio to realistic range
-        if np.isnan(calmar) or np.isinf(calmar):
-            return 0.0
-        
-        return max(-5.0, min(5.0, calmar))
+        return calmar if np.isfinite(calmar) else 0.0
     
     def value_at_risk(self, portfolio_values: List[float], 
                      confidence_level: float = 0.95) -> float:
@@ -316,7 +293,7 @@ class PerformanceAnalyzer:
                          benchmark_values: List[float]) -> float:
         """
         Calculate Information Ratio.
-        FIXED: More robust calculation.
+        FIXED: Accurate calculation without artificial limits.
         
         Args:
             portfolio_values (List[float]): Portfolio values
@@ -343,11 +320,7 @@ class PerformanceAnalyzer:
             
         info_ratio = np.mean(excess_returns) / tracking_error * np.sqrt(self.trading_days)
         
-        # Cap to realistic range
-        if np.isnan(info_ratio) or np.isinf(info_ratio):
-            return 0.0
-        
-        return max(-3.0, min(3.0, info_ratio))
+        return info_ratio if np.isfinite(info_ratio) else 0.0
     
     def beta(self, portfolio_values: List[float], 
             benchmark_values: List[float]) -> float:
@@ -379,11 +352,7 @@ class PerformanceAnalyzer:
                 
             beta_val = covariance / benchmark_variance
             
-            # Cap beta to reasonable range
-            if np.isnan(beta_val) or np.isinf(beta_val):
-                return 1.0
-            
-            return max(-5.0, min(5.0, beta_val))
+            return beta_val if np.isfinite(beta_val) else 1.0
             
         except:
             return 1.0
@@ -408,15 +377,12 @@ class PerformanceAnalyzer:
         
         alpha_val = portfolio_return - expected_return
         
-        # Cap alpha to reasonable range
-        if np.isnan(alpha_val) or np.isinf(alpha_val):
-            return 0.0
-        
-        return max(-2.0, min(2.0, alpha_val))
+        return alpha_val if np.isfinite(alpha_val) else 0.0
     
     def win_rate(self, trades: List[Dict]) -> float:
         """
         Calculate win rate from trades.
+        FIXED: Accurate win rate calculation based on individual trade profits.
         
         Args:
             trades (List[Dict]): List of trade dictionaries with 'profit' key
@@ -426,9 +392,35 @@ class PerformanceAnalyzer:
         """
         if not trades:
             return 0.0
+        
+        # Count profitable trades more accurately
+        profitable_trades = 0
+        total_valid_trades = 0
+        
+        for trade in trades:
+            profit = trade.get('profit', 0)
             
-        profitable_trades = sum(1 for trade in trades if trade.get('profit', 0) > 0)
-        return profitable_trades / len(trades)
+            # Skip trades with invalid or missing profit data
+            if profit is None or not np.isfinite(profit):
+                continue
+                
+            total_valid_trades += 1
+            
+            # A trade is profitable if profit > small threshold (to account for rounding)
+            if profit > 1e-6:  # Small positive threshold
+                profitable_trades += 1
+        
+        if total_valid_trades == 0:
+            return 0.0
+            
+        win_rate = profitable_trades / total_valid_trades
+        
+        # Log suspicious win rates for debugging
+        if win_rate == 1.0 and total_valid_trades > 5:
+            logger.warning(f"Suspicious 100% win rate detected with {total_valid_trades} trades. "
+                          f"This may indicate perfect hindsight optimization.")
+        
+        return win_rate
     
     def comprehensive_analysis(self, portfolio_values: List[float],
                              trades: Optional[List[Dict]] = None,
@@ -436,7 +428,7 @@ class PerformanceAnalyzer:
                              dates: Optional[List[str]] = None) -> Dict:
         """
         Perform comprehensive performance analysis.
-        FIXED: More robust analysis with realistic bounds.
+        FIXED: Accurate analysis with proper validation and no artificial constraints.
         
         Args:
             portfolio_values (List[float]): Portfolio values over time
@@ -568,18 +560,23 @@ class PerformanceAnalyzer:
         gross_losses = abs(sum(trade.get('profit', 0) for trade in trades if trade.get('profit', 0) < 0))
         
         if gross_losses == 0:
-            return 5.0 if gross_profits > 0 else 0.0
+            return 10.0 if gross_profits > 0 else 0.0
             
         profit_factor = gross_profits / gross_losses
         
-        # Cap to reasonable range
-        return min(profit_factor, 10.0)
+        return profit_factor if np.isfinite(profit_factor) else 0.0
     
     def average_trade_profit(self, trades: List[Dict]) -> float:
         """Calculate average profit per trade."""
         if not trades:
             return 0.0
-        return sum(trade.get('profit', 0) for trade in trades) / len(trades)
+        
+        valid_profits = [trade.get('profit', 0) for trade in trades if np.isfinite(trade.get('profit', 0))]
+        
+        if not valid_profits:
+            return 0.0
+            
+        return sum(valid_profits) / len(valid_profits)
     
     def largest_win_loss(self, trades: List[Dict]) -> Dict[str, float]:
         """
@@ -594,11 +591,14 @@ class PerformanceAnalyzer:
         if not trades:
             return {'largest_win': 0.0, 'largest_loss': 0.0}
             
-        profits = [trade.get('profit', 0) for trade in trades]
+        profits = [trade.get('profit', 0) for trade in trades if np.isfinite(trade.get('profit', 0))]
+        
+        if not profits:
+            return {'largest_win': 0.0, 'largest_loss': 0.0}
         
         return {
-            'largest_win': max(profits) if profits else 0.0,
-            'largest_loss': min(profits) if profits else 0.0
+            'largest_win': max(profits),
+            'largest_loss': min(profits)
         }
 
 
