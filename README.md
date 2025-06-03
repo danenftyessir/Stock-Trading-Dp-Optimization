@@ -159,14 +159,6 @@ Key parameters in `config.yaml`:
 - **Strategy Parameters**: k-values, transaction costs, baseline configurations
 - **Backtesting**: Capital allocation, train/test splits, risk-free rate
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -176,27 +168,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Danendra Shafi Athallah**
 - Email: danendra1967@gmail.com
 - Institution: Institut Teknologi Bandung
-- GitHub: [@danendra](https://github.com/danendra)
-
-## 📚 Citation
-
-If you use this project in your research, please cite:
-
-```bibtex
-@misc{athallah2024dp,
-  author = {Danendra Shafi Athallah},
-  title = {Dynamic Programming Approach for Optimizing Stock Trading Profits with K-Transactions},
-  institution = {Institut Teknologi Bandung},
-  year = {2024},
-  url = {https://github.com/danendra/stock-trading-dp-optimization}
-}
-```
-
-## 🔗 Links
-
-- [Documentation](docs/)
-- [API Reference](https://docs.anthropic.com)
-- [Issue Tracker](https://github.com/danendra/stock-trading-dp-optimization/issues)
-- [Alpha Vantage API](https://www.alphavantage.co/support/#api-key)
+- GitHub: [@danenftyessir](https://github.com/danenftyessir)
+- API Source: [Alpha Vantage API](https://www.alphavantage.co/support/#api-key)
 
 ---
