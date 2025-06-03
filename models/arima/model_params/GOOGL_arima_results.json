@@ -1,0 +1,40 @@
+{
+  "model_summary_str": "{'order': (0, 1, 0), 'aic': np.float64(-1479.9128391464774), 'bic': np.float64(-1475.1340542487922), 'hqic': np.float64(-1478.085243411957), 'log_likelihood': np.float64(740.9564195732387), 'params': {'sigma2': 0.010847143195106226}, 'pvalues': {'sigma2': 0.0}, 'training_samples': 880, 'residual_std': np.float64(0.26485622502123746), 'parameter_significance': {'significant_count': np.int64(0), 'total_params': 0, 'significance_ratio': 0, 'pvalues': {}}, 'model_quality': {'quality_score': 100.0, 'quality_category': 'Excellent', 'recommendations': ['Many parameters are not statistically significant', 'Consider simpler model with fewer parameters']}}",
+  "evaluation": {
+    "mse": 0.0002127874871300753,
+    "rmse": 0.014587237131481592,
+    "mae": 0.010287242264075758,
+    "mape": 0.21539492535545324,
+    "forecast_accuracy": 0.9978460507464455,
+    "directional_accuracy": 0.75,
+    "forecast_horizon": 5,
+    "test_samples": 5
+  },
+  "forecast": {
+    "predictions": [
+      5.243333058215277,
+      5.243333058215277,
+      5.243333058215277,
+      5.243333058215277,
+      5.243333058215277
+    ],
+    "conf_int_lower": [
+      5.071597572022146,
+      5.00046240539834,
+      4.945878472132866,
+      4.89986208773423,
+      4.859320839210561
+    ],
+    "conf_int_upper": [
+      5.415068544408408,
+      5.486203711032213,
+      5.540787644297688,
+      5.586804028696323,
+      5.627345277219993
+    ],
+    "confidence_level": 0.95,
+    "steps": 5
+  },
+  "success": true,
+  "params": null
+}

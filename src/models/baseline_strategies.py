@@ -1,6 +1,6 @@
 """
 Baseline Trading Strategies for comparison with Dynamic Programming approach.
-FIXED: Enhanced strategy implementations with proper performance tracking and validation.
+FIXED: Resolved ImportError by using absolute imports and fallback import handling.
 """
 
 import numpy as np
@@ -9,6 +9,19 @@ from typing import List, Dict, Tuple, Optional
 import logging
 
 logger = logging.getLogger(__name__)
+
+# FIXED: Import handling to avoid relative import issues
+try:
+    # Try absolute import first
+    from analysis.performance_metrics import PerformanceAnalyzer
+except ImportError:
+    try:
+        # Try relative import as fallback
+        from ..analysis.performance_metrics import PerformanceAnalyzer
+    except ImportError:
+        # If both fail, use None and implement fallback metrics
+        PerformanceAnalyzer = None
+        logger.warning("PerformanceAnalyzer not available, using fallback metrics calculation")
 
 
 class BuyAndHoldStrategy:
@@ -25,7 +38,7 @@ class BuyAndHoldStrategy:
             transaction_cost (float): Transaction cost as percentage
         """
         self.transaction_cost = transaction_cost
-        self.name = "Buy & Hold"
+        self.name = "Buy & Hold Strategy"
         
     def execute(self, prices: List[float], initial_capital: float = 100000) -> Dict:
         """
@@ -79,17 +92,18 @@ class BuyAndHoldStrategy:
             'duration': len(prices) - 1
         }]
         
-        # Calculate metrics for compatibility
-        from ..analysis.performance_metrics import PerformanceAnalyzer
-        
-        try:
-            analyzer = PerformanceAnalyzer()
-            metrics = analyzer.comprehensive_analysis(
-                portfolio_values=portfolio_values,
-                trades=trades
-            )
-        except ImportError:
-            # Fallback metrics calculation
+        # Calculate metrics using available analyzer or fallback
+        if PerformanceAnalyzer is not None:
+            try:
+                analyzer = PerformanceAnalyzer()
+                metrics = analyzer.comprehensive_analysis(
+                    portfolio_values=portfolio_values,
+                    trades=trades
+                )
+            except Exception as e:
+                logger.warning(f"PerformanceAnalyzer failed: {e}, using fallback")
+                metrics = self._calculate_basic_metrics(portfolio_values, trades, initial_capital)
+        else:
             metrics = self._calculate_basic_metrics(portfolio_values, trades, initial_capital)
         
         return {
@@ -302,14 +316,17 @@ class MovingAverageCrossoverStrategy:
         processed_trades = self._process_trades(trades)
         
         # Calculate metrics
-        try:
-            from ..analysis.performance_metrics import PerformanceAnalyzer
-            analyzer = PerformanceAnalyzer()
-            metrics = analyzer.comprehensive_analysis(
-                portfolio_values=portfolio_values,
-                trades=processed_trades
-            )
-        except ImportError:
+        if PerformanceAnalyzer is not None:
+            try:
+                analyzer = PerformanceAnalyzer()
+                metrics = analyzer.comprehensive_analysis(
+                    portfolio_values=portfolio_values,
+                    trades=processed_trades
+                )
+            except Exception as e:
+                logger.warning(f"PerformanceAnalyzer failed: {e}, using fallback")
+                metrics = self._calculate_basic_metrics(portfolio_values, processed_trades, initial_capital)
+        else:
             metrics = self._calculate_basic_metrics(portfolio_values, processed_trades, initial_capital)
         
         return {
@@ -538,14 +555,17 @@ class MomentumStrategy:
         processed_trades = self._process_trades(trades)
         
         # Calculate metrics
-        try:
-            from ..analysis.performance_metrics import PerformanceAnalyzer
-            analyzer = PerformanceAnalyzer()
-            metrics = analyzer.comprehensive_analysis(
-                portfolio_values=portfolio_values,
-                trades=processed_trades
-            )
-        except ImportError:
+        if PerformanceAnalyzer is not None:
+            try:
+                analyzer = PerformanceAnalyzer()
+                metrics = analyzer.comprehensive_analysis(
+                    portfolio_values=portfolio_values,
+                    trades=processed_trades
+                )
+            except Exception as e:
+                logger.warning(f"PerformanceAnalyzer failed: {e}, using fallback")
+                metrics = self._calculate_basic_metrics(portfolio_values, processed_trades, initial_capital)
+        else:
             metrics = self._calculate_basic_metrics(portfolio_values, processed_trades, initial_capital)
         
         return {

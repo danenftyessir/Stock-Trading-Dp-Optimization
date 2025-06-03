@@ -2,6 +2,7 @@
 """
 Backtesting Script for Stock Trading Optimization.
 Runs comprehensive backtesting analysis on trading strategies.
+FIXED: Resolved ImportError by using absolute imports and proper module path handling.
 
 Usage:
     python scripts/run_backtesting.py --strategy dp --k-values 2 5 10
@@ -18,15 +19,68 @@ from datetime import datetime
 from pathlib import Path
 import json
 
-# Add src to Python path
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
+# FIXED: Proper module path setup for direct script execution
+script_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(script_dir)
+src_path = os.path.join(project_root, 'src')
 
-from optimization.backtesting import BacktestEngine, BacktestConfig, DPTradingStrategy
-from optimization.parameter_tuning import DPParameterOptimizer, OptimizationConfig
-from models.baseline_strategies import BuyAndHoldStrategy, MovingAverageCrossoverStrategy, MomentumStrategy
-from analysis.performance_metrics import PerformanceAnalyzer
-from utils.logger import setup_global_logging
-from utils.helpers import load_config, save_json, ensure_directory
+# Add both project root and src to Python path
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+if src_path not in sys.path:
+    sys.path.insert(0, src_path)
+
+# FIXED: Use absolute imports to avoid relative import issues
+try:
+    from optimization.backtesting import BacktestEngine, BacktestConfig
+    from optimization.parameter_tuning import DPParameterOptimizer, OptimizationConfig
+    from models.dynamic_programing import DynamicProgrammingTrader
+    from models.baseline_strategies import BuyAndHoldStrategy, MovingAverageCrossoverStrategy, MomentumStrategy
+    from analysis.performance_metrics import PerformanceAnalyzer
+    from utils.logger import setup_global_logging
+    from utils.helpers import load_config, save_json, ensure_directory
+except ImportError as e:
+    print(f"Import error: {e}")
+    print("Please ensure you are running from the project root directory or install the package with 'pip install -e .'")
+    sys.exit(1)
+
+
+class DPTradingStrategy:
+    """Dynamic Programming strategy wrapper for backtesting."""
+    
+    def __init__(self, max_transactions: int, transaction_cost: float = 0.001):
+        self.max_transactions = max_transactions
+        self.transaction_cost = transaction_cost
+        self.trader = None
+        
+    def fit(self, train_data: pd.DataFrame) -> None:
+        """Fit DP strategy (no fitting required, just initialize)."""
+        self.trader = DynamicProgrammingTrader(
+            max_transactions=self.max_transactions,
+            transaction_cost=self.transaction_cost
+        )
+    
+    def predict_signals(self, data: pd.DataFrame) -> list:
+        """Generate optimal trading signals using DP."""
+        if 'adjusted_close' in data.columns:
+            prices = data['adjusted_close'].tolist()
+        else:
+            prices = data['close'].tolist()
+        
+        max_profit, trades = self.trader.optimize_profit(prices)
+        
+        # Convert trades to signals
+        signals = ['hold'] * len(prices)
+        for trade in trades:
+            if 'buy_day' in trade and trade['buy_day'] < len(signals):
+                signals[trade['buy_day']] = 'buy'
+            if 'sell_day' in trade and trade['sell_day'] < len(signals):
+                signals[trade['sell_day']] = 'sell'
+        
+        return signals
+    
+    def get_name(self) -> str:
+        return f"DP_K{self.max_transactions}"
 
 
 def setup_logging():
@@ -36,7 +90,7 @@ def setup_logging():
         'enable_console': True,
         'enable_file': True,
         'log_dir': 'logs',
-        'log_file': f'data_collection_{datetime.now().strftime("%Y%m%d")}.log'
+        'log_file': f'backtesting_{datetime.now().strftime("%Y%m%d")}.log'
     }
     return setup_global_logging(log_config)
 

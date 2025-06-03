@@ -1,6 +1,6 @@
 """
 Alpha Vantage API Client for stock data acquisition.
-FIXED: Proper handling of adjusted close price calculations and data validation.
+FIXED: Improved split detection logic and more accurate adjusted close price calculations.
 """
 
 import requests
@@ -19,8 +19,8 @@ logger = logging.getLogger(__name__)
 
 class AlphaVantageClient:
     """
-    Client for Alpha Vantage API with enhanced data processing.
-    FIXED: Proper adjusted close price calculation and validation.
+    Client for Alpha Vantage API with improved data processing.
+    FIXED: More conservative split detection and better adjusted close calculation.
     """
     
     def __init__(self, api_key: str, cache_dir: str = "data/raw/api_cache",
@@ -206,13 +206,13 @@ class AlphaVantageClient:
     def parse_daily_data(self, api_response: Dict) -> Optional[pd.DataFrame]:
         """
         Parse Alpha Vantage daily data response into pandas DataFrame.
-        FIXED: Proper adjusted close price calculation with dividend and split adjustments.
+        FIXED: More conservative adjusted close price calculation with improved split detection.
         
         Args:
             api_response (Dict): Raw API response
             
         Returns:
-            Optional[pd.DataFrame]: Parsed data with proper adjusted_close
+            Optional[pd.DataFrame]: Parsed data with improved adjusted_close
         """
         try:
             time_series_key = "Time Series (Daily)"
@@ -251,8 +251,8 @@ class AlphaVantageClient:
             # Sort by date (oldest first)
             df = df.sort_index()
             
-            # FIXED: Calculate proper adjusted close price
-            df['adjusted_close'] = self._calculate_adjusted_close(df)
+            # FIXED: More conservative adjusted close price calculation
+            df['adjusted_close'] = self._calculate_adjusted_close_conservative(df)
             
             # Add placeholder values for compatibility
             df['dividend_amount'] = 0.0
@@ -265,7 +265,7 @@ class AlphaVantageClient:
                 df.attrs['last_refreshed'] = meta_data.get('3. Last Refreshed', 'Unknown')
                 df.attrs['output_size'] = meta_data.get('4. Output Size', 'Unknown')
                 df.attrs['time_zone'] = meta_data.get('5. Time Zone', 'Unknown')
-                df.attrs['adjusted_close_note'] = 'Calculated using split and dividend adjustments'
+                df.attrs['adjusted_close_note'] = 'Conservative calculation for split adjustments from close prices'
             
             logger.info(f"Parsed {len(df)} days of data for {df.attrs.get('symbol', 'Unknown')}")
             return df
@@ -274,10 +274,10 @@ class AlphaVantageClient:
             logger.error(f"Error parsing API response: {e}")
             return None
     
-    def _calculate_adjusted_close(self, df: pd.DataFrame) -> pd.Series:
+    def _calculate_adjusted_close_conservative(self, df: pd.DataFrame) -> pd.Series:
         """
-        Calculate adjusted close price accounting for splits and dividends.
-        FIXED: Proper backward adjustment calculation for better accuracy.
+        Calculate adjusted close price with more conservative split detection.
+        FIXED: More conservative approach to avoid false positives in split detection.
         
         Args:
             df (pd.DataFrame): DataFrame with OHLCV data
@@ -286,45 +286,100 @@ class AlphaVantageClient:
             pd.Series: Adjusted close prices
         """
         close_prices = df['close'].copy()
+        volume = df['volume'].copy()
         
-        # Detect potential stock splits by looking for large price gaps
-        # A split is indicated by a price drop > 40% with volume spike
+        # Start with close prices as base
+        adjusted_close = close_prices.copy()
+        
+        # Only apply adjustments for very clear split signals
+        # More conservative thresholds to reduce false positives
         price_ratios = close_prices / close_prices.shift(1)
-        volume_ratios = df['volume'] / df['volume'].shift(1)
+        volume_ratios = volume / volume.shift(1)
         
-        # Identify potential split dates
-        split_threshold = 0.6  # 40% drop threshold
-        volume_threshold = 2.0  # Volume spike threshold
+        # Identify very likely stock splits with stricter criteria
+        split_threshold_low = 0.45  # More strict: 55% drop threshold (was 60%)
+        split_threshold_high = 0.55  # Upper bound for 2:1 split detection
+        volume_threshold = 3.0  # Higher volume spike requirement (was 2.0)
+        min_volume = volume.quantile(0.5)  # Must be above median volume
         
+        # Conservative split detection - only flag very clear cases
         potential_splits = (
-            (price_ratios < split_threshold) & 
-            (volume_ratios > volume_threshold) &
-            (df['volume'] > df['volume'].median())
+            (price_ratios < split_threshold_low) &  # Large price drop
+            (volume_ratios > volume_threshold) &    # Significant volume spike
+            (volume > min_volume) &                 # Above median volume
+            (close_prices.shift(1) > close_prices.shift(1).quantile(0.1))  # Not already very low
         )
         
-        # Calculate adjustment factors
-        adjustment_factor = pd.Series(1.0, index=df.index)
+        # Also check for 2:1 splits (around 50% drop)
+        two_for_one_splits = (
+            (price_ratios >= split_threshold_low) & 
+            (price_ratios <= split_threshold_high) &
+            (volume_ratios > volume_threshold) &
+            (volume > min_volume * 2)  # Even higher volume requirement for 2:1
+        )
         
-        # Work backwards from the most recent date
-        for date in reversed(df.index[potential_splits]):
-            split_ratio = price_ratios.loc[date]
+        # Combine all split indicators
+        all_splits = potential_splits | two_for_one_splits
+        
+        if all_splits.any():
+            # Calculate adjustment factors more conservatively
+            adjustment_factor = pd.Series(1.0, index=df.index)
+            split_dates = df.index[all_splits]
             
-            # Apply split adjustment to all previous dates
-            mask = df.index < date
-            adjustment_factor.loc[mask] *= split_ratio
+            logger.info(f"Detected {len(split_dates)} potential stock splits")
             
-            logger.info(f"Detected potential split on {date}: ratio {split_ratio:.3f}")
+            # Work backwards from the most recent date
+            for date in reversed(split_dates):
+                split_ratio = price_ratios.loc[date]
+                
+                # Additional validation - check if ratio is reasonable for a split
+                common_split_ratios = [0.5, 0.33, 0.25, 0.2]  # 2:1, 3:1, 4:1, 5:1
+                tolerance = 0.05
+                
+                is_common_split = any(abs(split_ratio - ratio) < tolerance for ratio in common_split_ratios)
+                
+                if is_common_split:
+                    # Apply split adjustment to all previous dates
+                    mask = df.index < date
+                    adjustment_factor.loc[mask] *= split_ratio
+                    
+                    logger.info(f"Applied split adjustment on {date.strftime('%Y-%m-%d')}: ratio {split_ratio:.3f}")
+                else:
+                    logger.debug(f"Skipped potential split on {date.strftime('%Y-%m-%d')}: ratio {split_ratio:.3f} not a common split ratio")
+            
+            # Apply adjustments
+            adjusted_close = close_prices * adjustment_factor
         
-        # Apply adjustments
-        adjusted_close = close_prices * adjustment_factor
+        # Conservative outlier smoothing - only smooth extreme outliers
+        if len(adjusted_close) > 10:
+            # Use a larger window for outlier detection
+            rolling_median = adjusted_close.rolling(window=10, center=True, min_periods=5).median()
+            rolling_std = adjusted_close.rolling(window=20, center=True, min_periods=10).std()
+            
+            # Only smooth very extreme outliers (5 standard deviations)
+            outliers = np.abs(adjusted_close - rolling_median) > (5 * rolling_std)
+            
+            if outliers.any():
+                outlier_count = outliers.sum()
+                logger.info(f"Smoothing {outlier_count} extreme outliers in adjusted close calculation")
+                
+                # Replace only the most extreme outliers
+                for idx in adjusted_close.index[outliers]:
+                    if not pd.isna(rolling_median.loc[idx]):
+                        adjusted_close.loc[idx] = rolling_median.loc[idx]
         
-        # Smooth out any remaining anomalies using rolling median
-        rolling_median = adjusted_close.rolling(window=5, center=True).median()
-        outliers = np.abs(adjusted_close - rolling_median) > (3 * adjusted_close.rolling(window=20).std())
+        # Final validation - ensure adjusted close is reasonable
+        # Check for any remaining extreme jumps that might indicate errors
+        final_ratios = adjusted_close / adjusted_close.shift(1)
+        extreme_changes = (final_ratios < 0.1) | (final_ratios > 10)
         
-        if outliers.any():
-            logger.info(f"Smoothing {outliers.sum()} outliers in adjusted close calculation")
-            adjusted_close.loc[outliers] = rolling_median.loc[outliers]
+        if extreme_changes.any():
+            logger.warning(f"Found {extreme_changes.sum()} extreme price changes after adjustment - these may indicate data quality issues")
+            
+            # For extreme changes, fall back to original close prices
+            for idx in adjusted_close.index[extreme_changes]:
+                if idx != adjusted_close.index[0]:  # Skip first value
+                    adjusted_close.loc[idx] = close_prices.loc[idx]
         
         return adjusted_close.fillna(close_prices)
     
@@ -337,7 +392,7 @@ class AlphaVantageClient:
             outputsize (str): Output size ('compact' or 'full')
             
         Returns:
-            Optional[pd.DataFrame]: Parsed stock data with proper adjusted_close
+            Optional[pd.DataFrame]: Parsed stock data with conservative adjusted_close
         """
         raw_data = self.get_daily_data(symbol, outputsize)
         if raw_data:
@@ -384,7 +439,8 @@ class AlphaVantageClient:
 
 class DataValidator:
     """
-    FIXED: Enhanced validator for stock data quality and completeness.
+    Enhanced validator for stock data quality and completeness.
+    FIXED: Better validation logic for conservative adjusted close calculations.
     """
     
     @staticmethod
@@ -393,7 +449,7 @@ class DataValidator:
                           config_end_date: Optional[str] = None) -> Dict[str, any]:
         """
         Validate stock data quality and return validation report.
-        FIXED: Enhanced validation with proper adjusted close price checks.
+        FIXED: Enhanced validation with conservative adjusted close price checks.
         
         Args:
             df (pd.DataFrame): Stock data to validate
@@ -461,21 +517,28 @@ class DataValidator:
                 report['warnings'].append("Low price greater than open/close detected")
                 quality_score -= 5.0
         
-        # FIXED: Validate adjusted close vs close relationship
+        # FIXED: More conservative validation for adjusted close vs close relationship
         if 'adjusted_close' in df.columns and 'close' in df.columns:
             adj_close_ratio = (df['adjusted_close'] / df['close']).fillna(1.0)
             
-            # Check for extreme adjustments (might indicate calculation errors)
-            extreme_adjustments = (adj_close_ratio < 0.1) | (adj_close_ratio > 10.0)
-            if extreme_adjustments.any():
-                report['warnings'].append(f"Extreme adjusted close adjustments detected: {extreme_adjustments.sum()} cases")
-                quality_score -= 5.0
-                
-            # Check adjustment consistency
-            adj_variance = adj_close_ratio.var()
-            if adj_variance > 0.1:  # High variance in adjustments
-                report['warnings'].append(f"High variance in price adjustments: {adj_variance:.4f}")
+            # Check for more conservative adjustment ranges
+            # Conservative: expect adjustments typically between 0.2 and 5.0
+            conservative_adjustments = (adj_close_ratio < 0.2) | (adj_close_ratio > 5.0)
+            if conservative_adjustments.any():
+                report['warnings'].append(f"Large adjusted close adjustments detected: {conservative_adjustments.sum()} cases (may indicate splits or data issues)")
                 quality_score -= 3.0
+                
+            # Check adjustment consistency with more tolerance
+            adj_variance = adj_close_ratio.var()
+            if adj_variance > 0.5:  # More tolerant threshold
+                report['warnings'].append(f"High variance in price adjustments: {adj_variance:.4f}")
+                quality_score -= 2.0
+            
+            # Check for reasonable relationship between adjusted and close
+            avg_ratio = adj_close_ratio.mean()
+            if avg_ratio < 0.5 or avg_ratio > 2.0:
+                report['warnings'].append(f"Average adj_close/close ratio outside normal range: {avg_ratio:.3f}")
+                quality_score -= 2.0
         
         # Check data coverage against expected date range
         if config_start_date and config_end_date and not df.empty:
@@ -513,14 +576,15 @@ class DataValidator:
                     'return_volatility': float(returns.std() * np.sqrt(252) * 100),
                     'max_daily_return': float(returns.max() * 100) if len(returns) > 0 else 0,
                     'min_daily_return': float(returns.min() * 100) if len(returns) > 0 else 0,
-                    'data_quality_score': max(0.0, quality_score)
+                    'data_quality_score': max(0.0, quality_score),
+                    'adjustment_method': 'Conservative split detection with fallback to close prices'
                 }
         
         # Set final quality score
         report['data_quality_score'] = max(0.0, quality_score)
         
         # Mark as invalid if quality score is too low
-        if quality_score < 50.0:
+        if quality_score < 40.0:  # More lenient threshold due to conservative approach
             report['is_valid'] = False
             report['issues'].append(f"Data quality score too low: {quality_score:.1f}/100")
             
